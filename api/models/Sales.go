@@ -35,10 +35,11 @@ type Sales struct {
 	PointsRedeem   int             `json:"points_redeem"`
 }
 type Data struct {
-	UserID    string
-	OwnerName string
-	Email     string
-	LastTrx   *time.Time
+	UserID            string
+	OwnerName         string
+	Email             string
+	LastTrx           *time.Time
+	Toko_name_address string
 }
 
 func (w *Sales) Prepare() {
@@ -92,16 +93,62 @@ func (w *Sales) FindSales(db *gorm.DB) (*Sales, error) {
 func Show(db *gorm.DB) (error, []Data) {
 	var datas []Data
 
-	query := `SELECT user_id, owner_name, email, Z.create_dtm as last_trx FROM (
-		SELECT user_id,owner_name, email, (SELECT create_dtm FROM sales WHERE create_dtm > current_date-7 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b
-		UNION SELECT user_id, owner_name, email, (SELECT create_dtm FROM onlinesales WHERE create_dtm > current_date-7 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b
-		UNION SELECT user_id, owner_name, email, (SELECT create_dtm FROM saved_orders so WHERE create_dtm > current_date-7 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b) AS Z`
-
+	// query := `SELECT user_id, owner_name, email, Z.create_dtm as last_trx FROM (
+	// 	SELECT user_id,owner_name, email, (SELECT create_dtm FROM sales WHERE create_dtm > current_date-100 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b
+	// 	UNION SELECT user_id, owner_name, email, (SELECT create_dtm FROM onlinesales WHERE create_dtm > current_date-7 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b
+	// 	UNION SELECT user_id, owner_name, email, (SELECT create_dtm FROM saved_orders so WHERE create_dtm > current_date-7 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b) AS Z`
+	query := `select user_id, owner_name, email, Z.create_dtm as last_trx, Z.toko_name_address from (
+	select user_id, owner_name, email, (select create_dtm from sales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address from subscribers b
+	UNION
+	select user_id, owner_name, email, (select create_dtm from onlinesales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address from subscribers b
+	UNION
+	select user_id, owner_name, email, (select create_dtm from saved_orders so where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address from subscribers b
+	) as Z`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		fmt.Println(err)
 		return err, nil
 	}
-
 	return nil, datas
 }
+
+// func Show(db *gorm.DB) (error, []Data) {
+//   var datas []Data
+
+//   rows, err := db.Raw(`SELECT user_id, owner_name, email, Z.create_dtm as last_trx FROM (
+//     SELECT user_id,owner_name, email, (SELECT create_dtm FROM sales WHERE create_dtm > current_date-7 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b
+//     UNION SELECT user_id, owner_name, email, (SELECT create_dtm FROM onlinesales WHERE create_dtm > current_date-7 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b
+//     UNION SELECT user_id, owner_name, email, (SELECT create_dtm FROM saved_orders so WHERE create_dtm > current_date-7 AND user_id = b.user_id ORDER BY id DESC LIMIT 1) FROM subscribers b) AS Z`).Rows()
+
+//   if err != nil {
+//     fmt.Errorf("%v", err)
+//     return err, datas
+//   }
+
+//   defer rows.Close()
+
+//   for rows.Next() {
+//     var (
+//       user_id    sql.NullString
+//       owner_name sql.NullString
+//       email      sql.NullString
+//       last_trx   sql.NullTime
+//     )
+
+//     err = rows.Scan(&user_id, &owner_name, &email, &last_trx)
+//     if err != nil {
+//       // handle this error
+//       fmt.Errorf("%v", err)
+//       return err, datas
+//     }
+
+//     datas = append(datas, Data{
+//       UserID:    user_id.String,
+//       OwnerName: owner_name.String,
+//       Email:     email.String,
+//       LastTrx:   last_trx.Time,
+//     })
+//   }
+
+//   return nil, datas
+// }

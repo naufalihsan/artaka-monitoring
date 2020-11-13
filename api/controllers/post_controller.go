@@ -335,17 +335,16 @@ func (server *Server) GetShow(c *gin.Context) {
 	err, datas := models.Show(server.DB)
 
 	if err != nil {
-		log.Println(err)
 		errList["No_Transaction"] = "No Tansaction Found"
 		c.JSON(http.StatusNotFound, gin.H{
-			"status":   http.StatusNotFound,
+			"status":   "Failed",
 			"error":    errList,
 			"response": "null",
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"status":   http.StatusOK,
+		"status":   "Success",
 		"response": datas,
 		"error":    "null",
 	})

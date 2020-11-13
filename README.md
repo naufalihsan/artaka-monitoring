@@ -127,10 +127,10 @@ UNION SELECT user_id, owner_name, email, (SELECT created_at FROM saved_orders so
 # Postgres Live
 
 API_SECRET=secret
-DB_HOST=ec2-50-17-197-184.compute-1.amazonaws.com
+DB_HOST=ec2-100-25-100-81.compute-1.amazonaws.com
 DB_DRIVER=postgres
-DB_USER=oxeranftemsdgz
-DB_PASSWORD=8a788e630817dc51c51d4867fd820eb5db05be64df56512d4808e3cfc50c0241
-DB_NAME=d5j6ucom5mdojp
+DB_USER=lpxailxgsfxfqh
+DB_PASSWORD=2b1bef004d29426e5d69d2a822a5a2fa7c889af8809a163f8ee4cd4fb38222e8
+DB_NAME=d4s0463supbqo6
 DB_PORT=5432
 PORT1=8087
