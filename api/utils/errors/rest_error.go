@@ -2,7 +2,7 @@ package errors
 
 type RestErr struct {
 	Message string `json:"message"`
-	Status  int    `json:"status"`
+	Status  string `json:"status"`
 	Error   string `json:"error"`
 }
 
