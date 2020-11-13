@@ -36,10 +36,10 @@ func (server *Server) CreatePost(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}
@@ -204,10 +204,10 @@ func (server *Server) UpdatePost(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}

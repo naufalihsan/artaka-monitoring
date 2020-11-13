@@ -22,10 +22,10 @@ func (server *Server) CreateAdmin(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Invalid Json Body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Bad_request",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 	}
 	admin := models.Admin{}
@@ -34,10 +34,10 @@ func (server *Server) CreateAdmin(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}
@@ -151,10 +151,10 @@ func (server *Server) UpdateAdmin(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Invalid Json Body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Invalid_request",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 	}
 	tokenID, err := auth.ExtractTokenID(c.Request)
@@ -189,10 +189,10 @@ func (server *Server) UpdateAdmin(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}

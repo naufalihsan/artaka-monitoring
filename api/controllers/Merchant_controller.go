@@ -38,10 +38,10 @@ func (server *Server) CreateMerchants(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}
@@ -91,10 +91,10 @@ func (server *Server) LoginMerchant(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}
@@ -161,10 +161,10 @@ func (server *Server) UpdateMerchant(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Invalid Request",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Invalid_request",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 	}
 	tokenID, err := auth.ExtractTokenID(c.Request)
@@ -199,10 +199,10 @@ func (server *Server) UpdateMerchant(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}
@@ -305,10 +305,10 @@ func (server *Server) CreateSavedOrder(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}
@@ -379,10 +379,10 @@ func (server *Server) CreateSales(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}
@@ -451,10 +451,10 @@ func (server *Server) CreateOnlineSales(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Cannot unmarshal body",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Unmarshal_error",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 
 	}
@@ -538,10 +538,10 @@ func (server *Server) GetMerchant(c *gin.Context) {
 	if err != nil {
 		restErr := errors.RestErr{
 			Message: "Invalid Request",
-			Status:  http.StatusBadRequest,
+			Status:  "Failed",
 			Error:   "Invalid_request",
 		}
-		c.JSON(restErr.Status, restErr)
+		c.JSON(http.StatusBadRequest, restErr)
 		return
 	}
 	merchant := models.Subscribers{}
