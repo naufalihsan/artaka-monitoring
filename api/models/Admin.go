@@ -21,6 +21,7 @@ type Admin struct {
 	Secret_password string    `json:"secret_password"`
 }
 
+// lier
 func (a *Admin) BeforeSave() error {
 	hashedPassword, err := security.Hash(a.Secret_password)
 	if err != nil {
