@@ -127,10 +127,13 @@ UNION SELECT user_id, owner_name, email, (SELECT created_at FROM saved_orders so
 # Postgres Live
 
 API_SECRET=secret
-DB_HOST=127.0.0.1
+DB_HOST=ec2-100-25-100-81.compute-1.amazonaws.com
 DB_DRIVER=postgres
-DB_USER=postgres
-DB_PASSWORD=root
-DB_NAME=forum_db_test
+DB_USER=lpxailxgsfxfqh
+DB_PASSWORD=2b1bef004d29426e5d69d2a822a5a2fa7c889af8809a163f8ee4cd4fb38222e8
+DB_NAME=d4s0463supbqo6
 DB_PORT=5432
 PORT1=8087
+heroku pg:psql --app https://git.heroku.com/artaka.git < artakatable_web_monitor1.sql
+
+/usr/bin/pg_dump --file "/var/lib/pgadmin/storage/gunturkurniawan238_gmail.com/artaka.sql" --host "localhost" --port "5432" --username "postgres" --no-password --verbose --format=t --blobs "forum_db_test"
