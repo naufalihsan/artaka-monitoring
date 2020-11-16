@@ -15,7 +15,6 @@ type Post struct {
 	Content   string    `gorm:"text;not null;" json:"content"`
 	Author    Admin     `json:"author"`
 	AuthorID  uint32    `gorm:"not null" json:"author_id"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
@@ -23,7 +22,6 @@ func (p *Post) Prepare() {
 	p.Phone = html.EscapeString(strings.TrimSpace(p.Phone))
 	p.Content = html.EscapeString(strings.TrimSpace(p.Content))
 	p.Author = Admin{}
-	p.CreatedAt = time.Now()
 	p.UpdatedAt = time.Now()
 }
 
