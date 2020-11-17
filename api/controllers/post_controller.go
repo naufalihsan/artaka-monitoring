@@ -335,36 +335,41 @@ func (server *Server) GetShow(c *gin.Context) {
 	err, datas := models.Show(server.DB)
 
 	if err != nil {
-		errList["No_Transaction"] = "No Tansaction Found"
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
-			"error":    errList,
+			"error":    "Semua Merchant Aktif",
 			"response": "null",
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"status":   "Success",
-		"response": datas,
-		"error":    "null",
-	})
+	for _, d := range datas {
+		d.Feedback = ""
+		c.JSON(http.StatusOK, gin.H{
+			"status":   "Success",
+			"response": d,
+			"error":    "null",
+		})
+	}
 }
+func (server *Server) Respon(c *gin.Context) {
 
-func (server *Server) Already(c *gin.Context) {
-
-	err, datas := models.AlreadyContact(server.DB)
+	err, datas := models.Show(server.DB)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
-			"error":    "Not ALready contacted with admin",
+			"error":    "Belum ada merchant yg di respon",
 			"response": "null",
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"status":   "Success",
-		"response": datas,
-		"error":    "null",
-	})
+	for _, d := range datas {
+		if d.Feedback != "" {
+			c.JSON(http.StatusOK, gin.H{
+				"status":   "Success",
+				"response": d,
+				"error":    "null",
+			})
+		}
+	}
 }

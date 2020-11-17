@@ -130,6 +130,8 @@ heroku pg:psql --app https://git.heroku.com/artaka.git < artakatable_web_monitor
 
 /usr/bin/pg_dump --file "/var/lib/pgadmin/storage/gunturkurniawan238_gmail.com/artaka.sql" --host "localhost" --port "5432" --username "postgres" --no-password --verbose --format=t --blobs "forum_db_test"
 
+# Postgres Live
+
 API_SECRET=secret
 DB_HOST=ec2-3-211-176-230.compute-1.amazonaws.com
 DB_DRIVER=postgres
