@@ -343,7 +343,6 @@ func (server *Server) GetShow(c *gin.Context) {
 		})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"status":   "Success",
 		"response": datas,
