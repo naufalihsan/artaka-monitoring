@@ -41,6 +41,12 @@ type Data struct {
 	Create_dtm        string
 	Toko_name_address string
 }
+type Already struct {
+	UserID    string
+	OwnerName string
+	Email     string
+	Content   string
+}
 
 func (w *Sales) Prepare() {
 	w.SalesType = html.EscapeString(strings.TrimSpace(w.SalesType))
@@ -102,6 +108,19 @@ func Show(db *gorm.DB) (error, []Data) {
 		UNION
 		select user_id, owner_name, email, (select create_dtm from saved_orders so where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address from subscribers b
 		) as Z GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address`
+	err := db.Raw(query).Scan(&datas).Error
+	if err != nil {
+		fmt.Println(err)
+		return err, nil
+	}
+	return nil, datas
+}
+
+// SELECT * FROM posts LEFT OUTER JOIN subscribers ON (user_id = phone);
+func AlreadyContact(db *gorm.DB) (error, []Already) {
+	var datas []Already
+
+	query := `SELECT C.user_id, C.owner_name,C.email, Ci.content from subscribers AS C, posts AS Ci where C.user_id = Ci.phone;`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		fmt.Println(err)

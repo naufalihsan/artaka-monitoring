@@ -12,6 +12,7 @@ func (s *Server) initialRoutes() {
 		v1.GET("/transactionsaved", s.GetLastSaved)
 		v1.GET("/transactionOnline", s.GetLastOnline)
 		v1.GET("/ShowSleep", s.GetShow)
+		v1.GET("/ShowAlready", s.Already)
 
 		v1.GET("/getall/:id", s.GetMerchant)
 		v1.POST("/register", s.CreateAdmin)

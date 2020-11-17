@@ -349,3 +349,22 @@ func (server *Server) GetShow(c *gin.Context) {
 		"error":    "null",
 	})
 }
+
+func (server *Server) Already(c *gin.Context) {
+
+	err, datas := models.AlreadyContact(server.DB)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Not ALready contacted with admin",
+			"response": "null",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}
