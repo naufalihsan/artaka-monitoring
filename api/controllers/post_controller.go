@@ -25,8 +25,9 @@ func (server *Server) CreatePost(c *gin.Context) {
 	if err != nil {
 		errList["Invalid_body"] = "Unable to get request"
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"status": http.StatusUnprocessableEntity,
-			"error":  errList,
+			"status":   "Failed",
+			"error":    "Failed",
+			"Response": "Null",
 		})
 		return
 	}
@@ -47,8 +48,9 @@ func (server *Server) CreatePost(c *gin.Context) {
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": http.StatusUnauthorized,
-			"error":  errList,
+			"status":   "Failed",
+			"error":    "Failed",
+			"Response": "Null",
 		})
 		return
 	}
@@ -59,8 +61,9 @@ func (server *Server) CreatePost(c *gin.Context) {
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": http.StatusUnauthorized,
-			"error":  errList,
+			"status":   "Failed",
+			"error":    "Invalid Credentials",
+			"Response": "Null",
 		})
 		return
 	}
@@ -70,10 +73,11 @@ func (server *Server) CreatePost(c *gin.Context) {
 	post.Prepare()
 	errorMessages := post.Validate()
 	if len(errorMessages) > 0 {
-		errList = errorMessages
+		// errList = errorMessages
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"status": http.StatusUnprocessableEntity,
-			"error":  errList,
+			"status":   "Failed",
+			"error":    "Failed",
+			"Response": "Null",
 		})
 		return
 	}
@@ -81,15 +85,16 @@ func (server *Server) CreatePost(c *gin.Context) {
 	postCreated, err := post.SavePost(server.DB)
 	log.Println(err)
 	if err != nil {
-		errList := formaterror.FormatError(err.Error())
+		// errList := formaterror.FormatError(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status": http.StatusInternalServerError,
-			"error":  errList,
+			"status":   "Failed",
+			"error":    "Invalid Credentials",
+			"Response": "Null",
 		})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
-		"status":   http.StatusCreated,
+		"status":   "Success",
 		"response": postCreated,
 	})
 }
@@ -110,6 +115,7 @@ func (server *Server) GetPosts(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":   http.StatusOK,
 		"response": posts,
+		"Error":    "Null",
 	})
 }
 
