@@ -329,8 +329,26 @@ func (server *Server) GetUserPosts(c *gin.Context) {
 		"response": posts,
 	})
 }
+func (server *Server) Showall(c *gin.Context) {
 
-func (server *Server) GetShow(c *gin.Context) {
+	err, datas := models.Allshow(server.DB)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Merchant Aktif Semua",
+			"response": "null",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}
+func (server *Server) NotAll(c *gin.Context) {
 
 	err, datas := models.Show(server.DB)
 
