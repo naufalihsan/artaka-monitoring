@@ -335,10 +335,29 @@ func (server *Server) GetShow(c *gin.Context) {
 	err, datas := models.Show(server.DB)
 
 	if err != nil {
-		errList["No_Transaction"] = "No Tansaction Found"
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
-			"error":    errList,
+			"error":    "Merchant Aktif Semua",
+			"response": "null",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}
+
+func (server *Server) Already(c *gin.Context) {
+
+	err, datas := models.Show1(server.DB)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Not ALready contacted with admin",
 			"response": "null",
 		})
 		return

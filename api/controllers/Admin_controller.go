@@ -59,7 +59,6 @@ func (server *Server) CreateAdmin(c *gin.Context) {
 }
 
 func (server *Server) LoginAdmin(c *gin.Context) {
-	errList = map[string]string{}
 
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
