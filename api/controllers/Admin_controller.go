@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -94,8 +95,14 @@ func (server *Server) LoginAdmin(c *gin.Context) {
 		})
 		return
 	}
-	adminData, err := server.SignIn(admin.Email, admin.Secret_password)
+	var adminData interface{}
+	if admin.Email != "" {
+		adminData, err = server.SignInByEmail(admin.Email, admin.Secret_password)
+	} else if admin.Phone != "" {
+		adminData, err = server.SignInByPhone(admin.Phone, admin.Secret_password)
+	}
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusOK, gin.H{
 			"status":   "Failed",
 			"error":    "Email Or Password Wrong",
@@ -109,7 +116,7 @@ func (server *Server) LoginAdmin(c *gin.Context) {
 	})
 }
 
-func (server *Server) SignIn(email string, password string) (map[string]interface{}, error) {
+func (server *Server) SignInByEmail(email, password string) (map[string]interface{}, error) {
 	var err error
 
 	adminData := make(map[string]interface{})
@@ -134,6 +141,38 @@ func (server *Server) SignIn(email string, password string) (map[string]interfac
 	adminData["token"] = token
 	adminData["id"] = admin.ID
 	adminData["email"] = admin.Email
+	adminData["username"] = admin.Username
+	adminData["phone"] = admin.Phone
+
+	return adminData, nil
+}
+func (server *Server) SignInByPhone(phone, password string) (map[string]interface{}, error) {
+	var err error
+
+	adminData := make(map[string]interface{})
+
+	admin := models.Admin{}
+
+	err = server.DB.Debug().Model(models.Admin{}).Where("phone = ?", phone).Take(&admin).Error
+	if err != nil {
+		fmt.Println("this is the error getting the user: ", err)
+		return nil, err
+	}
+	err = security.VerifyPassword(admin.Secret_password, password)
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		fmt.Println("this is the error hashing the password: ", err)
+		return nil, err
+	}
+	token, err := auth.CreateToken(admin.ID)
+	if err != nil {
+		fmt.Println("this is the error creating the token: ", err)
+		return nil, err
+	}
+	adminData["token"] = token
+	adminData["id"] = admin.ID
+	adminData["email"] = admin.Email
+	adminData["phone"] = admin.Phone
+
 	adminData["username"] = admin.Username
 
 	return adminData, nil

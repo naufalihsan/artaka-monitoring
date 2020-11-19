@@ -12,6 +12,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+// Admin struct
 type Admin struct {
 	ID              uint32    `gorm:"primary_key;auto_increment" json:"id"`
 	Phone           string    `gorm:"size:100;" json:"phone"`
@@ -21,7 +22,6 @@ type Admin struct {
 	Secret_password string    `json:"secret_password"`
 }
 
-// lier
 func (a *Admin) BeforeSave() error {
 	hashedPassword, err := security.Hash(a.Secret_password)
 	if err != nil {
@@ -60,7 +60,7 @@ func (a *Admin) Validate(action string) map[string]string {
 			err = errors.New("Required Password")
 			errorMessages["Required_password"] = err.Error()
 		}
-		if a.Email == "" {
+		if a.Email == "" && a.Phone == "" {
 			err = errors.New("Required Email")
 			errorMessages["Required_email"] = err.Error()
 		}

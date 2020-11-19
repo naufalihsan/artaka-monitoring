@@ -83,9 +83,8 @@ func (server *Server) CreatePost(c *gin.Context) {
 	}
 
 	postCreated, err := post.SavePost(server.DB)
-	log.Println(err)
 	if err != nil {
-		// errList := formaterror.FormatError(err.Error())
+		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":   "Failed",
 			"error":    "Invalid Credentials",
