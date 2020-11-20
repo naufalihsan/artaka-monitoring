@@ -14,6 +14,7 @@ type Post struct {
 	Phone     string    `gorm:"size:255;not null;" json:"phone"`
 	Content   string    `gorm:"text;not null;" json:"content"`
 	Author    Admin     `json:"author"`
+	Boolean   bool      `json:"boolean"gorm:"default:false"`
 	AuthorID  uint32    `gorm:"not null" json:"author_id"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
@@ -36,11 +37,7 @@ func (p *Post) Validate() map[string]string {
 		errorMessages["Required_Phone"] = err.Error()
 
 	}
-	if p.Content == "" {
-		err = errors.New("Required Content")
-		errorMessages["Required_content"] = err.Error()
 
-	}
 	if p.AuthorID < 1 {
 		err = errors.New("Required Author")
 		errorMessages["Required_author"] = err.Error()

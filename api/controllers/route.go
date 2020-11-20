@@ -14,6 +14,7 @@ func (s *Server) initialRoutes() {
 		v1.GET("/NotYetContact", s.NotAll)
 		v1.GET("/Already", s.Already)
 		v1.GET("/ShowSleep", s.Showall)
+		v1.GET("/NotRespon", s.LateRespon)
 
 		v1.GET("/getall/:id", s.GetMerchant)
 		v1.POST("/register", s.CreateAdmin)

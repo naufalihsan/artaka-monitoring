@@ -3,7 +3,6 @@ package models
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"html"
 	"strings"
 	"time"
@@ -39,8 +38,10 @@ type Data struct {
 	OwnerName         string
 	Email             string
 	Create_dtm        string
+	Updated           string
 	Toko_name_address string
 	Feedback          string
+	Boolean           bool
 }
 
 func (w *Sales) Prepare() {
@@ -105,7 +106,6 @@ func Show(db *gorm.DB) (error, []Data) {
 		) as Z GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
-		fmt.Println(err)
 		return err, nil
 	}
 	var res []Data
@@ -120,15 +120,14 @@ func Show1(db *gorm.DB) (error, []Data) {
 	var datas []Data
 
 	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback from (
-		select user_id, owner_name, email, (select create_dtm from sales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback from subscribers b
+		select user_id, owner_name, email, (select create_dtm from sales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback  from subscribers b
 		UNION
-		select user_id, owner_name, email, (select create_dtm from onlinesales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback from subscribers b
+		select user_id, owner_name, email, (select create_dtm from onlinesales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback  from subscribers b
 		UNION
-		select user_id, owner_name, email, (select create_dtm from saved_orders so where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback  from subscribers b
+		select user_id, owner_name, email, (select create_dtm from saved_orders so where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback  from subscribers b
 		) as Z GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
-		fmt.Println(err)
 		return err, nil
 	}
 	var res []Data
@@ -142,17 +141,40 @@ func Show1(db *gorm.DB) (error, []Data) {
 func Allshow(db *gorm.DB) (error, []Data) {
 	var datas []Data
 
-	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback from (
-		select user_id, owner_name, email, (select create_dtm from sales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback from subscribers b
+	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.boolean from (
+		select user_id, owner_name, email, (select create_dtm from sales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback,(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean from subscribers b
 		UNION
-		select user_id, owner_name, email, (select create_dtm from onlinesales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback from subscribers b
+		select user_id, owner_name, email, (select create_dtm from onlinesales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback,(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean from subscribers b
 		UNION
-		select user_id, owner_name, email, (select create_dtm from saved_orders so where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback  from subscribers b
-		) as Z GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback`
+		select user_id, owner_name, email, (select create_dtm from saved_orders so where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback,(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean  from subscribers b
+		) as Z GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback,Z.boolean`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
-		fmt.Println(err)
 		return err, nil
 	}
+
 	return nil, datas
+}
+
+func NotRespon(db *gorm.DB) (error, []Data) {
+	var datas []Data
+
+	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.boolean from (
+		select user_id, owner_name, email, (select create_dtm from sales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback,(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean from subscribers b
+		UNION
+		select user_id, owner_name, email, (select create_dtm from onlinesales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback,(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean from subscribers b
+		UNION
+		select user_id, owner_name, email, (select create_dtm from saved_orders so where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback,(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean  from subscribers b
+		) as Z GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback,Z.boolean`
+	err := db.Raw(query).Scan(&datas).Error
+	if err != nil {
+		return err, nil
+	}
+	var res []Data
+	for i := 0; i < len(datas); i++ {
+		if datas[i].Boolean == true {
+			res = append(res, datas[i])
+		}
+	}
+	return nil, res
 }
