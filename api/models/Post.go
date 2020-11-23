@@ -60,49 +60,9 @@ func (p *Post) SavePost(db *gorm.DB) (*Post, error) {
 	return p, nil
 }
 
-func (p *Post) FindAllPosts(db *gorm.DB) (*[]Post, error) {
-	var err error
-	posts := []Post{}
-	err = db.Debug().Model(&Post{}).Limit(100).Order("created_at desc").Find(&posts).Error
-	if err != nil {
-		return &[]Post{}, err
-	}
-
-	if len(posts) > 0 {
-		for i, _ := range posts {
-			err := db.Debug().Model(&Admin{}).Where("id = ?", posts[i].AuthorID).Take(&posts[i].Author).Error
-			if err != nil {
-				return &[]Post{}, err
-			}
-		}
-	}
-	for i, _ := range posts {
-		posts[i].Author.Secret_password = ""
-	}
-
-	return &posts, nil
-}
-
 func (p *Post) FindPostByID(db *gorm.DB, pid uint64) (*Post, error) {
 	var err error
 	err = db.Debug().Model(&Post{}).Where("id = ?", pid).Take(&p).Error
-	if err != nil {
-		return &Post{}, err
-	}
-	if p.ID != 0 {
-		err = db.Debug().Model(&Admin{}).Where("id = ?", p.AuthorID).Take(&p.Author).Error
-		if err != nil {
-			return &Post{}, err
-		}
-	}
-	return p, nil
-}
-
-func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
-
-	var err error
-
-	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(Post{Phone: p.Phone, Content: p.Content, UpdatedAt: time.Now()}).Error
 	if err != nil {
 		return &Post{}, err
 	}
@@ -122,6 +82,22 @@ func (p *Post) DeleteAPost(db *gorm.DB) (int64, error) {
 		return 0, db.Error
 	}
 	return db.RowsAffected, nil
+}
+func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
+
+	var err error
+
+	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(Post{Phone: p.Phone, Boolean: p.Boolean, Content: p.Content, UpdatedAt: time.Now()}).Error
+	if err != nil {
+		return &Post{}, err
+	}
+	if p.ID != 0 {
+		err = db.Debug().Model(&Admin{}).Where("id = ?", p.AuthorID).Take(&p.Author).Error
+		if err != nil {
+			return &Post{}, err
+		}
+	}
+	return p, nil
 }
 
 func (p *Post) FindUserPosts(db *gorm.DB, uid uint32) (*[]Post, error) {

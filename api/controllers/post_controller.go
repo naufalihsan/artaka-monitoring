@@ -98,26 +98,6 @@ func (server *Server) CreatePost(c *gin.Context) {
 	})
 }
 
-func (server *Server) GetPosts(c *gin.Context) {
-
-	post := models.Post{}
-
-	posts, err := post.FindAllPosts(server.DB)
-	if err != nil {
-		errList["No_post"] = "No Post Found"
-		c.JSON(http.StatusNotFound, gin.H{
-			"status": http.StatusNotFound,
-			"error":  errList,
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"status":   http.StatusOK,
-		"response": posts,
-		"Error":    "Null",
-	})
-}
-
 func (server *Server) GetPost(c *gin.Context) {
 
 	postID := c.Param("id")
@@ -147,7 +127,6 @@ func (server *Server) GetPost(c *gin.Context) {
 		"response": postReceived,
 	})
 }
-
 func (server *Server) UpdatePost(c *gin.Context) {
 
 	//clear previous error if any
@@ -207,14 +186,12 @@ func (server *Server) UpdatePost(c *gin.Context) {
 	post := models.Post{}
 	err = json.Unmarshal(body, &post)
 	if err != nil {
-		restErr := errors.RestErr{
-			Message: "Cannot unmarshal body",
-			Status:  "Failed",
-			Error:   "Unmarshal_error",
-		}
-		c.JSON(http.StatusBadRequest, restErr)
+		errList["Unmarshal_error"] = "Cannot unmarshal body"
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"status": http.StatusUnprocessableEntity,
+			"error":  errList,
+		})
 		return
-
 	}
 	post.ID = origPost.ID //this is important to tell the model the post id to update, the other update field are set above
 	post.AuthorID = origPost.AuthorID
@@ -243,7 +220,6 @@ func (server *Server) UpdatePost(c *gin.Context) {
 		"response": postUpdated,
 	})
 }
-
 func (server *Server) DeletePost(c *gin.Context) {
 
 	postID := c.Param("id")
@@ -337,7 +313,6 @@ func (server *Server) GetUserPosts(c *gin.Context) {
 func (server *Server) Showall(c *gin.Context) {
 
 	err, datas := models.Allshow(server.DB)
-	log.Println(datas)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
@@ -356,7 +331,6 @@ func (server *Server) Showall(c *gin.Context) {
 func (server *Server) LateRespon(c *gin.Context) {
 
 	err, datas := models.NotRespon(server.DB)
-	log.Println(datas)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",

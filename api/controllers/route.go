@@ -31,7 +31,7 @@ func (s *Server) initialRoutes() {
 	v3 := s.Router.Group("/api/post")
 	{
 		v3.POST("/create", middlewares.TokenAuthMiddleware(), s.CreatePost)
-
+		v3.PUT("/:id", middlewares.TokenAuthMiddleware(), s.UpdatePost)
 	}
 	v4 := s.Router.Group("/api/transaction")
 	{

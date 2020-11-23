@@ -38,7 +38,6 @@ type Data struct {
 	OwnerName         string
 	Email             string
 	Create_dtm        string
-	Updated           string
 	Toko_name_address string
 	Feedback          string
 	Boolean           bool
