@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gunturbudikurniawan/Artaka/api/auth"
 	"github.com/gunturbudikurniawan/Artaka/api/utils/errors"
-	"github.com/gunturbudikurniawan/Artaka/api/utils/formaterror"
 )
 
 func (server *Server) CreatePost(c *gin.Context) {
@@ -148,8 +147,9 @@ func (server *Server) UpdatePost(c *gin.Context) {
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": http.StatusUnauthorized,
-			"error":  errList,
+			"status":   http.StatusUnauthorized,
+			"error":    "Unauthorized",
+			"response": "null",
 		})
 		return
 	}
@@ -159,16 +159,18 @@ func (server *Server) UpdatePost(c *gin.Context) {
 	if err != nil {
 		errList["No_post"] = "No Post Found"
 		c.JSON(http.StatusNotFound, gin.H{
-			"status": http.StatusNotFound,
-			"error":  errList,
+			"status":   http.StatusNotFound,
+			"error":    "No Post Found",
+			"response": "null",
 		})
 		return
 	}
 	if uid != origPost.AuthorID {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": http.StatusUnauthorized,
-			"error":  errList,
+			"status":   http.StatusUnauthorized,
+			"error":    "Unauthorized",
+			"Response": "null",
 		})
 		return
 	}
@@ -177,8 +179,9 @@ func (server *Server) UpdatePost(c *gin.Context) {
 	if err != nil {
 		errList["Invalid_body"] = "Unable to get request"
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"status": http.StatusUnprocessableEntity,
-			"error":  errList,
+			"status":   http.StatusUnprocessableEntity,
+			"error":    "Unable to get request",
+			"Response": "Null",
 		})
 		return
 	}
@@ -188,8 +191,9 @@ func (server *Server) UpdatePost(c *gin.Context) {
 	if err != nil {
 		errList["Unmarshal_error"] = "Cannot unmarshal body"
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"status": http.StatusUnprocessableEntity,
-			"error":  errList,
+			"status":   http.StatusUnprocessableEntity,
+			"error":    "Cannot unmarshal body",
+			"Response": "Null",
 		})
 		return
 	}
@@ -201,23 +205,25 @@ func (server *Server) UpdatePost(c *gin.Context) {
 	if len(errorMessages) > 0 {
 		errList = errorMessages
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"status": http.StatusUnprocessableEntity,
-			"error":  errList,
+			"status":   http.StatusUnprocessableEntity,
+			"error":    "Unauthorized",
+			"Response": "Null",
 		})
 		return
 	}
 	postUpdated, err := post.UpdateAPost(server.DB)
 	if err != nil {
-		errList := formaterror.FormatError(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status": http.StatusInternalServerError,
-			"error":  errList,
+			"status":   http.StatusInternalServerError,
+			"error":    "Unauthorized",
+			"response": "Null",
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":   http.StatusOK,
 		"response": postUpdated,
+		"error":    "Null",
 	})
 }
 func (server *Server) DeletePost(c *gin.Context) {
