@@ -43,7 +43,7 @@ type Data struct {
 	Tanggal           string
 	Boolean           string
 	Idpost            uint64
-	Images            json.RawMessage
+	Images            []json.RawMessage
 }
 
 func (w *Sales) Prepare() {
