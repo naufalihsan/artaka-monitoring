@@ -22,6 +22,7 @@ type Post struct {
 func (p *Post) Prepare() {
 	p.Phone = html.EscapeString(strings.TrimSpace(p.Phone))
 	p.Content = html.EscapeString(strings.TrimSpace(p.Content))
+	p.Boolean = p.Boolean
 	p.Author = Admin{}
 	p.UpdatedAt = time.Now()
 }
