@@ -192,7 +192,7 @@ func NotRespon(db *gorm.DB) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Boolean == "1" {
+		if datas[i].Boolean != false {
 			res = append(res, datas[i])
 		}
 	}
