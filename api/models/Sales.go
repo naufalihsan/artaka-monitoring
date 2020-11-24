@@ -41,7 +41,7 @@ type Data struct {
 	Toko_name_address string
 	Feedback          string
 	Tanggal           string
-	Boolean           string
+	Boolean           bool
 	Idpost            uint64
 	Images            json.RawMessage `json:"images"`
 }
@@ -192,7 +192,7 @@ func NotRespon(db *gorm.DB) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Boolean == "1" {
+		if datas[i].Boolean != false {
 			res = append(res, datas[i])
 		}
 	}
