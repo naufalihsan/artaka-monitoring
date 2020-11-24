@@ -100,7 +100,6 @@ func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
 	return p, nil
 }
 
-//halo
 func (p *Post) FindUserPosts(db *gorm.DB, uid uint32) (*[]Post, error) {
 
 	var err error
