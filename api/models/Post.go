@@ -15,7 +15,7 @@ type Post struct {
 	Phone     string    `gorm:"size:255;not null;" json:"phone"`
 	Content   string    `gorm:"text;not null;" json:"content"`
 	Author    Admin     `json:"author"`
-	Boolean   string    `json:"boolean,omitempty" gorm:"default:'0'"`
+	Boolean   string    `json:"boolean,omitempty" gorm:"default:0"`
 	AuthorID  uint32    `gorm:"not null" json:"author_id"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
