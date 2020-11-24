@@ -41,7 +41,7 @@ type Data struct {
 	Toko_name_address string
 	Feedback          string
 	Tanggal           string
-	Boolean           string
+	Boolean           bool
 	Idpost            uint64
 	Images            json.RawMessage `json:"images"`
 }
