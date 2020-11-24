@@ -3,7 +3,6 @@ package models
 import (
 	"errors"
 	"html"
-	"log"
 	"strings"
 	"time"
 
@@ -23,7 +22,6 @@ type Post struct {
 func (p *Post) Prepare() {
 	p.Phone = html.EscapeString(strings.TrimSpace(p.Phone))
 	p.Content = html.EscapeString(strings.TrimSpace(p.Content))
-	p.Boolean = html.EscapeString(strings.TrimSpace(p.Boolean))
 	p.Author = Admin{}
 	p.UpdatedAt = time.Now()
 }
@@ -89,12 +87,7 @@ func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
 
 	var err error
 
-	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(map[string]interface{}{
-		"Phone":     p.Phone,
-		"Boolean":   p.Boolean,
-		"Content":   p.Content,
-		"UpdatedAt": time.Now(),
-	}).Error
+	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(Post{Phone: p.Phone, Content: p.Content, Boolean: p.Boolean, UpdatedAt: time.Now()}).Error
 	if err != nil {
 		return &Post{}, err
 	}
@@ -104,7 +97,7 @@ func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
 			return &Post{}, err
 		}
 	}
-	log.Println(p)
+
 	return p, nil
 }
 
