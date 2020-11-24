@@ -148,7 +148,7 @@ func Allshow(db *gorm.DB) (error, []Data) {
 		UNION
 		select user_id, owner_name, email, (select create_dtm from saved_orders so where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select concat(content,'|', updated_at) as content from posts where content IS NOT NULL AND  phone = b.user_id limit 1) as feedback,(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean,(select id from posts where  phone = b.user_id limit 1) as idpost from subscribers b
 		) as Z GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback,Z.boolean,Z.idpost`
-	err := db.Raw(query, 1).Scan(&datas).Error
+	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
 	}
