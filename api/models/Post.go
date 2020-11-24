@@ -15,7 +15,7 @@ type Post struct {
 	Phone     string    `gorm:"size:255;not null;" json:"phone"`
 	Content   string    `gorm:"text;not null;" json:"content"`
 	Author    Admin     `json:"author"`
-	Boolean   *bool     `json:"boolean,omitempty" gorm:"default:false"`
+	Boolean   string    `json:"boolean,omitempty" gorm:"default:'0'"`
 	AuthorID  uint32    `gorm:"not null" json:"author_id"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
@@ -23,6 +23,7 @@ type Post struct {
 func (p *Post) Prepare() {
 	p.Phone = html.EscapeString(strings.TrimSpace(p.Phone))
 	p.Content = html.EscapeString(strings.TrimSpace(p.Content))
+	p.Boolean = html.EscapeString(strings.TrimSpace(p.Boolean))
 	p.Author = Admin{}
 	p.UpdatedAt = time.Now()
 }
@@ -90,7 +91,7 @@ func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
 
 	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(map[string]interface{}{
 		"Phone":     p.Phone,
-		"Boolean":   true,
+		"Boolean":   p.Boolean,
 		"Content":   p.Content,
 		"UpdatedAt": time.Now(),
 	}).Error

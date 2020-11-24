@@ -40,7 +40,7 @@ type Data struct {
 	Create_dtm        string
 	Toko_name_address string
 	Feedback          string
-	Boolean           bool
+	Boolean           string
 	Idpost            uint64
 }
 
@@ -172,7 +172,7 @@ func NotRespon(db *gorm.DB) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Boolean == true {
+		if datas[i].Boolean == "1" {
 			res = append(res, datas[i])
 		}
 	}
