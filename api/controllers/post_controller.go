@@ -54,7 +54,6 @@ func (server *Server) CreatePost(c *gin.Context) {
 		return
 	}
 
-	// check if the user exist:
 	user := models.Admin{}
 	err = server.DB.Debug().Model(models.Admin{}).Where("id = ?", uid).Take(&user).Error
 	if err != nil {
