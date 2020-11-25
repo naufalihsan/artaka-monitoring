@@ -30,7 +30,7 @@ func (server *Server) CreatePost(c *gin.Context) {
 		})
 		return
 	}
-	post := models.Post{}
+	post := new(models.Post)
 
 	err = json.Unmarshal(body, &post)
 	if err != nil {
@@ -109,7 +109,7 @@ func (server *Server) GetPost(c *gin.Context) {
 		})
 		return
 	}
-	post := models.Post{}
+	post := new(models.Post)
 
 	postReceived, err := post.FindPostByID(server.DB, pid)
 	if err != nil {
@@ -126,6 +126,7 @@ func (server *Server) GetPost(c *gin.Context) {
 		"response": postReceived,
 	})
 }
+
 func (server *Server) UpdatePost(c *gin.Context) {
 
 	//clear previous error if any
@@ -186,7 +187,7 @@ func (server *Server) UpdatePost(c *gin.Context) {
 		return
 	}
 	// Start processing the request data
-	post := models.Post{}
+	post := new(models.Post)
 	err = json.Unmarshal(body, &post)
 	if err != nil {
 		errList["Unmarshal_error"] = "Cannot unmarshal body"
@@ -253,7 +254,7 @@ func (server *Server) DeletePost(c *gin.Context) {
 		return
 	}
 	// Check if the post exist
-	post := models.Post{}
+	post := new(models.Post)
 	err = server.DB.Debug().Model(models.Post{}).Where("id = ?", pid).Take(&post).Error
 	if err != nil {
 		errList["No_post"] = "No Post Found"
@@ -301,7 +302,7 @@ func (server *Server) GetUserPosts(c *gin.Context) {
 		})
 		return
 	}
-	post := models.Post{}
+	post := new(models.Post)
 	posts, err := post.FindUserPosts(server.DB, uint32(uid))
 	if err != nil {
 		errList["No_post"] = "No Post Found"
