@@ -14,7 +14,7 @@ type Post struct {
 	Phone     string    `gorm:"size:255;not null;" json:"phone"`
 	Content   string    `gorm:"text;not null;" json:"content"`
 	Author    Admin     `json:"author"`
-	Boolean   bool      `json:"boolean,omitempty" gorm:"type:boolean; default:'0'"`
+	Isboolean bool      `json:"isboolean" gorm:"type:boolean; default:'0'"`
 	AuthorID  uint32    `gorm:"not null" json:"author_id"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
@@ -84,10 +84,14 @@ func (p *Post) DeleteAPost(db *gorm.DB) (int64, error) {
 	return db.RowsAffected, nil
 }
 func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
-
 	var err error
-
-	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(Post{Phone: p.Phone, Content: p.Content, Boolean: p.Boolean, UpdatedAt: time.Now()}).Error
+	if p.Isboolean {
+		db.Debug().Model(&Post{}).Where("id = ?",
+			p.ID).Updates(Post{Phone: p.Phone, Content: p.Content, Isboolean: p.Isboolean, UpdatedAt: time.Now()})
+	} else {
+		db.Debug().Model(&Post{}).Where("id = ?",
+			p.ID).Updates(Post{Phone: p.Phone, Content: p.Content, Isboolean: p.Isboolean, UpdatedAt: time.Now()})
+	}
 	if err != nil {
 		return &Post{}, err
 	}
@@ -97,7 +101,6 @@ func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
 			return &Post{}, err
 		}
 	}
-
 	return p, nil
 }
 

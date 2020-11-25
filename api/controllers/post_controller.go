@@ -58,6 +58,7 @@ func (server *Server) CreatePost(c *gin.Context) {
 	user := models.Admin{}
 	err = server.DB.Debug().Model(models.Admin{}).Where("id = ?", uid).Take(&user).Error
 	if err != nil {
+		log.Println(err)
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"status":   "Failed",
