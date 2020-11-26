@@ -143,17 +143,17 @@ func (server *Server) UpdatePost(c *gin.Context) {
 		})
 		return
 	}
-	//CHeck if the auth token is valid and  get the user id from it
-	uid, err := auth.ExtractTokenID(c.Request)
-	if err != nil {
-		errList["Unauthorized"] = "Unauthorized"
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status":   http.StatusUnauthorized,
-			"error":    "Unauthorized",
-			"response": "null",
-		})
-		return
-	}
+	// //CHeck if the auth token is valid and  get the user id from it
+	// uid, err := auth.ExtractTokenID(c.Request)
+	// if err != nil {
+	// 	errList["Unauthorized"] = "Unauthorized"
+	// 	c.JSON(http.StatusUnauthorized, gin.H{
+	// 		"status":   http.StatusUnauthorized,
+	// 		"error":    "Unauthorized",
+	// 		"response": "null",
+	// 	})
+	// 	return
+	// }
 	//Check if the post exist
 	origPost := models.Post{}
 	err = server.DB.Debug().Model(models.Post{}).Where("id = ?", pid).Take(&origPost).Error
@@ -166,15 +166,15 @@ func (server *Server) UpdatePost(c *gin.Context) {
 		})
 		return
 	}
-	if uid != origPost.AuthorID {
-		errList["Unauthorized"] = "Unauthorized"
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status":   http.StatusUnauthorized,
-			"error":    "Unauthorized",
-			"Response": "null",
-		})
-		return
-	}
+	// if uid != origPost.AuthorID {
+	// 	errList["Unauthorized"] = "Unauthorized"
+	// 	c.JSON(http.StatusUnauthorized, gin.H{
+	// 		"status":   http.StatusUnauthorized,
+	// 		"error":    "Unauthorized",
+	// 		"Response": "null",
+	// 	})
+	// 	return
+	// }
 	// Read the data posted
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
