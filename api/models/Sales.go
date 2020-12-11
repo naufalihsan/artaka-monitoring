@@ -95,7 +95,6 @@ func (w *Sales) FindSales(db *gorm.DB) (*Sales, error) {
 	return w, err
 }
 
-// heroku pg:psql --app artaka < /home/guntur/dbase.sql
 func Show(db *gorm.DB) (error, []Data) {
 	var datas []Data
 
@@ -120,7 +119,6 @@ func Show(db *gorm.DB) (error, []Data) {
 }
 func Show1(db *gorm.DB) (error, []Data) {
 	var datas []Data
-
 	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.tanggal,Z.contacted,Z.idpost from (
 		select user_id, owner_name, email, (select create_dtm from sales where user_id = b.user_id order by id desc limit 1), (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, (select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, (select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,(select contacted as contacted from posts where phone = b.user_id limit 1) as contacted,(select id from posts where  phone = b.user_id limit 1) as idpost from subscribers b
 		UNION
