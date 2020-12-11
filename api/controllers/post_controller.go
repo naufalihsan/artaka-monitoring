@@ -410,3 +410,22 @@ func (server *Server) ShowSalesPayment(c *gin.Context) {
 		"error":    "null",
 	})
 }
+
+func (server *Server) ShowOnlineSalesPayment(c *gin.Context) {
+
+	err, datas := models.ShowPaymentMethodVAOnlineSales(server.DB)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Tidak ada Payment Method Serupa",
+			"response": "null",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}

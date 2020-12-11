@@ -3,6 +3,8 @@ package models
 import (
 	"encoding/json"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Onlinesales1 struct {
@@ -33,4 +35,15 @@ type Onlinesales1 struct {
 	Points_redeem    int             `json:"points_redeem"`
 	Order_status     string          `json:"order_status"`
 	Shipment_number  string          `json:"shipment_number"`
+}
+
+func ShowPaymentMethodVAOnlineSales(db *gorm.DB) (error, []Onlinesales1) {
+	var datas []Onlinesales1
+	query := `SELECT * FROM onlinesales WHERE payment_method LIKE '%Virtual Account%'`
+	err := db.Raw(query).Scan(&datas).Error
+	if err != nil {
+		return err, nil
+	}
+
+	return nil, datas
 }
