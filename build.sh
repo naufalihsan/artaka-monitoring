@@ -1,3 +1,3 @@
 set -xe
 
-go build -o bin/application.go
+GOARCH=amd64 GOOS=linux go build -o bin/application application.go
