@@ -1,1 +1,1 @@
-web: bin/Artaka
+web: bin/Application
