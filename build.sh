@@ -1,3 +1,3 @@
 set -xe
 
-go build -o bin/application server.go
+go build -o bin/application main.go
