@@ -31,9 +31,9 @@ func Run() {
 	server.Initialize(os.Getenv("DB_DRIVER"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_PORT"), os.Getenv("DB_HOST"), os.Getenv("DB_NAME"))
 
 	apiPort := os.Getenv("PORT")
-	fmt.Printf("Listening to port %s", "8089")
+	fmt.Printf("Listening to port %s", "5000")
 	if apiPort == "" {
-		apiPort = "8089"
+		apiPort = "5000"
 	}
 	server.Run(":" + apiPort)
 }
