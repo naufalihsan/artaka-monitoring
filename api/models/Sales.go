@@ -135,12 +135,14 @@ func Show1(db *gorm.DB) (error, []Data) {
 		if datas[i].Feedback != "" {
 			res = append(res, datas[i])
 		}
+		if datas[i].Contacted != "1" {
+			res = append(res, datas[i])
+		}
 	}
 	return nil, res
 }
 func Allshow(db *gorm.DB) (error, []Data) {
 	var datas []Data
-	//halo
 	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.tanggal,Z.contacted,Z.idpost,Z.images 
 from (select user_id, owner_name, email, (select create_dtm from sales where user_id = b.user_id order by id desc limit 1), 
 (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 

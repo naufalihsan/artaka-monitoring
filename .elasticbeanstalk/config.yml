@@ -1,0 +1,19 @@
+branch-defaults:
+  master:
+    environment: monitoring-artaka
+environment-defaults:
+  monitoring-artaka:
+    branch: null
+    repository: null
+global:
+  application_name: monitoring-artaka
+  default_ec2_keyname: ihsan-artaka
+  default_platform: Go 1 running on 64bit Amazon Linux 2
+  default_region: ap-southeast-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  sc: git
+  workspace_type: Application
