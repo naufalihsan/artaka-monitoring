@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6b126d90-81e5-40e9-ad5d-77c1c433da22" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.ebextensions/https-instance.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ebextensions/nginx/conf.d/https.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="6b126d90-81e5-40e9-ad5d-77c1c433da22" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
