@@ -14,7 +14,7 @@ type Post struct {
 	Phone     string    `gorm:"size:255;not null;" json:"phone"`
 	Content   string    `gorm:"text;not null;" json:"content"`
 	Author    Admin     `json:"author"`
-	Contacted string    `gorm:"default:'0'" json:"contacted"  `
+	Boolean   string    `gorm:"default:'0'" json:"boolean"  `
 	AuthorID  uint32    `gorm:"not null" json:"author_id"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
@@ -88,7 +88,7 @@ func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
 
 	var err error
 
-	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(Post{Phone: p.Phone, Content: p.Content, Contacted: p.Contacted, UpdatedAt: time.Now()}).Error
+	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(Post{Phone: p.Phone, Content: p.Content, Boolean: p.Boolean, UpdatedAt: time.Now()}).Error
 	if err != nil {
 		return &Post{}, err
 	}
