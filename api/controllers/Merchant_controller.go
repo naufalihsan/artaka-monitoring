@@ -524,26 +524,6 @@ func (server *Server) GetCertainSubscribers(c *gin.Context) {
 		"error":    "null",
 	})
 }
-func (server *Server) GetMerchants(c *gin.Context) {
-
-	errList = map[string]string{}
-
-	merchant := models.Subscribers{}
-
-	merchants, err := merchant.FindAllMerchants(server.DB)
-	if err != nil {
-		errList["No_user"] = "No User Found"
-		c.JSON(http.StatusOK, gin.H{
-			"status": http.StatusInternalServerError,
-			"error":  errList,
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"status":   http.StatusOK,
-		"response": merchants,
-	})
-}
 
 func (server *Server) GetMerchant(c *gin.Context) {
 
