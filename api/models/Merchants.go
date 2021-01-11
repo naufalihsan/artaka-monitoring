@@ -29,6 +29,14 @@ type Subscribers struct {
 	Idcard_image     json.RawMessage `json:"idcard_image"`
 	Referral_code    string          `json:"referral_code"`
 }
+type MerchantsData struct {
+	ID            uint32    `gorm:"primary_key;auto_increment" json:"id"`
+	Create_dtm    time.Time `json:"create_dtm"`
+	User_id       string    `json:"user_id"`
+	Email         string    `json:"email"`
+	Owner_name    string    `json:"owner_name"`
+	Referral_code string    `json:"referral_code"`
+}
 
 func (m *Subscribers) BeforeSave() error {
 	hashedPassword, err := security.Hash(m.Secret_password)
@@ -190,6 +198,15 @@ func (m *Subscribers) FindAllMerchants(db *gorm.DB) (*[]Subscribers, error) {
 		return &[]Subscribers{}, err
 	}
 	return &merchants, err
+}
+func ShowSubscribers(db *gorm.DB) ([]*MerchantsData, error) {
+	query := `select id, create_dtm, user_id, email, owner_name, referral_code from subscribers`
+	var merchant []*MerchantsData
+	err := db.Raw(query).Scan(&merchant).Error
+	if err != nil {
+		return nil, err
+	}
+	return merchant, nil
 }
 
 func (m *Subscribers) FindMerchantByID(db *gorm.DB, uid uint32) (*Subscribers, error) {

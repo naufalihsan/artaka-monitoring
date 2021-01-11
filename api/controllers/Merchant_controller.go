@@ -506,7 +506,24 @@ func (server *Server) CreateOnlineSales(c *gin.Context) {
 		"Error":    "Null",
 	})
 }
+func (server *Server) GetCertainSubscribers(c *gin.Context) {
 
+	err, datas := models.ShowSubscribers(server.DB)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Tidak ada merchants",
+			"response": "null",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}
 func (server *Server) GetMerchants(c *gin.Context) {
 
 	errList = map[string]string{}
