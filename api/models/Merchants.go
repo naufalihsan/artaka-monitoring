@@ -199,14 +199,14 @@ func (m *Subscribers) FindAllMerchants(db *gorm.DB) (*[]Subscribers, error) {
 	}
 	return &merchants, err
 }
-func ShowSubscribers(db *gorm.DB) ([]*MerchantsData, error) {
+func ShowSubscribers(db *gorm.DB) (error, []*MerchantsData) {
 	query := `select id, create_dtm, user_id, email, owner_name, referral_code from subscribers`
 	var merchant []*MerchantsData
 	err := db.Raw(query).Scan(&merchant).Error
 	if err != nil {
-		return nil, err
+		return err, nil
 	}
-	return merchant, nil
+	return nil, merchant
 }
 
 func (m *Subscribers) FindMerchantByID(db *gorm.DB, uid uint32) (*Subscribers, error) {
