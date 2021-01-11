@@ -7,8 +7,6 @@ import (
 func (s *Server) initialRoutes() {
 	v1 := s.Router.Group("/api/admin")
 	{
-		v1.GET("/getall", s.GetMerchants)
-		v1.GET("/transactionSales", s.GetLastMerchant)
 		v1.GET("/transactionsaved", s.GetLastSaved)
 		v1.GET("/transactionOnline", s.GetLastOnline)
 		v1.GET("/NotYetContact", s.NotAll)
