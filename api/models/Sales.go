@@ -129,7 +129,7 @@ func Show(db *gorm.DB) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Boolean == "1" && datas[i].Feedback == "" {
+		if datas[i].Boolean == "" && datas[i].Feedback == "" {
 			res = append(res, datas[i])
 		}
 
