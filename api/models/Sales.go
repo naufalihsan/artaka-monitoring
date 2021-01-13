@@ -37,7 +37,7 @@ type Data struct {
 	UserID            string
 	OwnerName         string
 	Email             string
-	Create_dtm        string
+	Create_dtm        time.Time
 	Toko_name_address string
 	Feedback          string
 	Tanggal           string
