@@ -99,7 +99,7 @@ func Show(db *gorm.DB) (error, []Data) {
 	var datas []Data
 
 	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.tanggal,Z.boolean,Z.idpost,Z.images 
-	from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -107,7 +107,7 @@ func Show(db *gorm.DB) (error, []Data) {
 	(select id from posts where  phone = b.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
 	UNION
-	select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -115,7 +115,7 @@ func Show(db *gorm.DB) (error, []Data) {
 	(select id from posts where  phone = b.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
 	UNION
-	select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -139,7 +139,7 @@ func Show(db *gorm.DB) (error, []Data) {
 func Show1(db *gorm.DB) (error, []Data) {
 	var datas []Data
 	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.tanggal,Z.boolean,Z.idpost,Z.images 
-	from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -147,7 +147,7 @@ func Show1(db *gorm.DB) (error, []Data) {
 	(select id from posts where  phone = b.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
 	UNION
-	select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -155,7 +155,7 @@ func Show1(db *gorm.DB) (error, []Data) {
 	(select id from posts where  phone = b.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
 	UNION
-	select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -178,7 +178,7 @@ func Show1(db *gorm.DB) (error, []Data) {
 func Allshow(db *gorm.DB) (error, []Data) {
 	var datas []Data
 	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.tanggal,Z.boolean,Z.idpost,Z.images 
-from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 (select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 (select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -186,7 +186,7 @@ from (select user_id, owner_name, email, (select create_dtm from sales where cre
 (select id from posts where  phone = b.user_id limit 1) as idpost, 
 (select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
 UNION
-select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 (select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 (select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -194,7 +194,7 @@ select user_id, owner_name, email, (select create_dtm from onlinesales where cre
 (select id from posts where  phone = b.user_id limit 1) as idpost, 
 (select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
 UNION
-select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 (select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 (select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 (select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -206,15 +206,23 @@ GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback,Z.tang
 	if err != nil {
 		return err, nil
 	}
-
-	return nil, datas
+	var res []Data
+	nao := time.Now().Unix()
+	lastWeek := time.Now().AddDate(0, 0, -7).Unix()
+	for i := 0; i < len(datas); i++ {
+		tgl := datas[i].Create_dtm.Unix()
+		if tgl > nao || tgl < lastWeek {
+			res = append(res, datas[i])
+		}
+	}
+	return nil, res
 }
 
 func NotRespon(db *gorm.DB) (error, []Data) {
 	var datas []Data
 
 	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.tanggal,Z.boolean,Z.idpost,Z.images 
-	from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -222,7 +230,7 @@ func NotRespon(db *gorm.DB) (error, []Data) {
 	(select id from posts where  phone = b.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
 	UNION
-	select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
@@ -230,7 +238,7 @@ func NotRespon(db *gorm.DB) (error, []Data) {
 	(select id from posts where  phone = b.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
 	UNION
-	select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= current_date - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
+	select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
 	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
 	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
 	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
