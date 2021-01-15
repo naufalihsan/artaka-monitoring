@@ -139,31 +139,40 @@ func Show(db *gorm.DB) (error, []Data) {
 }
 func Show1(db *gorm.DB) (error, []Data) {
 	var datas []Data
-	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.tanggal,Z.boolean,Z.idpost,Z.images 
-	from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
-	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
-	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
-	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
-	(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean, 
-	(select id from posts where  phone = b.user_id limit 1) as idpost, 
-	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
+	query := `select xx.user_id,(select owner_name from subscribers where user_id = xx.user_id limit 1) owner_name, 
+	(select email from subscribers where user_id = xx.user_id limit 1) email, 
+	(select create_dtm from subscribers where user_id = xx.user_id limit 1) register, max(xx.create_dtm) as create_dtm,
+	(select concat(nama,'|', address) as Toko_name_address from outlets where user_id = xx.user_id limit 1) as Toko_name_address, 
+	(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1) as feedback, 
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1) as tanggal,
+	(select boolean as boolean from posts where phone = xx.user_id limit 1) as boolean,
+	(select id from posts where  phone = xx.user_id limit 1) as idpost, 
+	(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1) as images
+	from(select y.user_id, max(y.create_dtm) as create_dtm from(select a.user_id, 
+	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
+	from subscribers a UNION select b.user_id, 
+	(select create_dtm from onlinesales where user_id = b.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
+	from subscribers b UNION select c.user_id, 
+	(select create_dtm from saved_orders where user_id = c.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1) 
+	from subscribers c) y group by y.user_id) xx where xx.user_id not in
+	(select yy.user_id from
+	(select y.user_id, max(y.create_dtm)from(select a.user_id, 
+	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1)
+	from subscribers a UNION select b.user_id, 
+	(select create_dtm from onlinesales where user_id = b.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1)
+	from subscribers b
 	UNION
-	select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
-	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
-	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
-	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
-	(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean,
-	(select id from posts where  phone = b.user_id limit 1) as idpost, 
-	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
-	UNION
-	select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
-	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
-	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
-	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
-	(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean,
-	(select id from posts where  phone = b.user_id limit 1) as idpost, 
-	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b) as Z 
-	GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback,Z.tanggal,Z.boolean,Z.idpost,Z.images`
+	select c.user_id, 
+	(select create_dtm from saved_orders where user_id = c.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1) 
+	from subscribers c) y where y.create_dtm is not null group by y.user_id) yy)  
+	GROUP BY xx.user_id, (select owner_name from subscribers where user_id = xx.user_id limit 1), (select email from subscribers where user_id = xx.user_id limit 1), (select create_dtm from subscribers where user_id = xx.user_id limit 1), 
+	(select concat(nama,'|', address) as nama from outlets where user_id = xx.user_id limit 1),(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1),
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1),(select boolean as boolean from posts where phone = xx.user_id limit 1),
+	(select id from posts where  phone = xx.user_id limit 1),(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1)
+	ORDER BY xx.user_id, (select owner_name from subscribers where user_id = xx.user_id limit 1), (select email from subscribers where user_id = xx.user_id limit 1),  (select create_dtm from subscribers where user_id = xx.user_id limit 1),
+	(select concat(nama,'|', address) as nama from outlets where user_id = xx.user_id limit 1),(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1),
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1),(select boolean as boolean from posts where phone = xx.user_id limit 1),
+	(select id from posts where  phone = xx.user_id limit 1),(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1)`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
@@ -225,31 +234,40 @@ func Allshow(db *gorm.DB) (error, []Data) {
 
 func NotRespon(db *gorm.DB) (error, []Data) {
 	var datas []Data
-	query := `select Z.user_id, Z.owner_name, Z.email, MAX(Z.create_dtm) as create_dtm, Z.toko_name_address,Z.feedback,Z.tanggal,Z.boolean,Z.idpost,Z.images 
-	from (select user_id, owner_name, email, (select create_dtm from sales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
-	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
-	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
-	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
-	(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean, 
-	(select id from posts where  phone = b.user_id limit 1) as idpost, 
-	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
+	query := `select xx.user_id,(select owner_name from subscribers where user_id = xx.user_id limit 1) owner_name, 
+	(select email from subscribers where user_id = xx.user_id limit 1) email, 
+	(select create_dtm from subscribers where user_id = xx.user_id limit 1) register, max(xx.create_dtm) as create_dtm,
+	(select concat(nama,'|', address) as Toko_name_address from outlets where user_id = xx.user_id limit 1) as Toko_name_address, 
+	(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1) as feedback, 
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1) as tanggal,
+	(select boolean as boolean from posts where phone = xx.user_id limit 1) as boolean,
+	(select id from posts where  phone = xx.user_id limit 1) as idpost, 
+	(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1) as images
+	from(select y.user_id, max(y.create_dtm) as create_dtm from(select a.user_id, 
+	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
+	from subscribers a UNION select b.user_id, 
+	(select create_dtm from onlinesales where user_id = b.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
+	from subscribers b UNION select c.user_id, 
+	(select create_dtm from saved_orders where user_id = c.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1) 
+	from subscribers c) y group by y.user_id) xx where xx.user_id not in
+	(select yy.user_id from
+	(select y.user_id, max(y.create_dtm)from(select a.user_id, 
+	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1)
+	from subscribers a UNION select b.user_id, 
+	(select create_dtm from onlinesales where user_id = b.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1)
+	from subscribers b
 	UNION
-	select user_id, owner_name, email, (select create_dtm from onlinesales where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
-	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
-	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
-	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
-	(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean,
-	(select id from posts where  phone = b.user_id limit 1) as idpost, 
-	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b
-	UNION
-	select user_id, owner_name, email, (select create_dtm from saved_orders where create_dtm <= now() - interval '7 days' AND user_id = b.user_id order by id desc limit 1), 
-	(select concat(nama,'|', address) as nama from outlets where user_id = b.user_id limit 1) as toko_name_address, 
-	(select content as content from posts where content IS NOT NULL AND phone = b.user_id limit 1) as feedback, 
-	(select updated_at from posts where content IS NOT NULL AND phone = b.user_id limit 1) as tanggal,
-	(select boolean as boolean from posts where phone = b.user_id limit 1) as boolean,
-	(select id from posts where  phone = b.user_id limit 1) as idpost, 
-	(select to_jsonb(images) from outlets where user_id = b.user_id limit 1) as images from subscribers b) as Z 
-	GROUP BY Z.user_id, Z.owner_name, Z.email, Z.toko_name_address,Z.feedback,Z.tanggal,Z.boolean,Z.idpost,Z.images`
+	select c.user_id, 
+	(select create_dtm from saved_orders where user_id = c.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1) 
+	from subscribers c) y where y.create_dtm is not null group by y.user_id) yy)  
+	GROUP BY xx.user_id, (select owner_name from subscribers where user_id = xx.user_id limit 1), (select email from subscribers where user_id = xx.user_id limit 1), (select create_dtm from subscribers where user_id = xx.user_id limit 1), 
+	(select concat(nama,'|', address) as nama from outlets where user_id = xx.user_id limit 1),(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1),
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1),(select boolean as boolean from posts where phone = xx.user_id limit 1),
+	(select id from posts where  phone = xx.user_id limit 1),(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1)
+	ORDER BY xx.user_id, (select owner_name from subscribers where user_id = xx.user_id limit 1), (select email from subscribers where user_id = xx.user_id limit 1),  (select create_dtm from subscribers where user_id = xx.user_id limit 1),
+	(select concat(nama,'|', address) as nama from outlets where user_id = xx.user_id limit 1),(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1),
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1),(select boolean as boolean from posts where phone = xx.user_id limit 1),
+	(select id from posts where  phone = xx.user_id limit 1),(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1)`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
