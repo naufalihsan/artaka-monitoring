@@ -34,16 +34,16 @@ type Sales struct {
 	PointsRedeem   int             `json:"points_redeem"`
 }
 type Data struct {
-	UserID            string
-	OwnerName         string
-	Email             string
-	Register          time.Time
-	Create_dtm        time.Time
-	Toko_name_address string
-	Feedback          string
-	Tanggal           string
-	Boolean           string `json:"boolean" `
-	Idpost            uint64
+	UserID            string          `json:"user_id"`
+	OwnerName         string          `json:"owner_name"`
+	Email             string          `json:"email"`
+	Register          time.Time       `json:"register"`
+	Create_dtm        time.Time       `json:"create_dtm"`
+	Toko_name_address string          `json:"toko_name_address"`
+	Feedback          string          `json:"feedback"`
+	Tanggal           string          `json:"tanggal"`
+	Boolean           string          `json:"boolean" `
+	Idpost            uint64          `json:"idpost"`
 	Images            json.RawMessage `json:"images"`
 }
 
