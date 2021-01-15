@@ -43,6 +43,7 @@ func (server *Server) Initialize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, D
 		&models.Sales{},
 		&models.Onlinesales{},
 		&models.Outlets{},
+		&models.Data{},
 	)
 	server.Router = gin.Default()
 	server.Router.Use(middlewares.CORSMiddleware())
