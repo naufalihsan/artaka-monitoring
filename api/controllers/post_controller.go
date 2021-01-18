@@ -335,6 +335,24 @@ func (server *Server) Showall(c *gin.Context) {
 		"error":    "null",
 	})
 }
+func (server *Server) ShowforWiranesia(c *gin.Context) {
+
+	err, datas := models.ResponForWiranesia(server.DB)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Tidak Ada Merchant Yang tidak respon",
+			"response": "null",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}
 func (server *Server) LateRespon(c *gin.Context) {
 
 	err, datas := models.NotRespon(server.DB)
