@@ -294,3 +294,53 @@ func NotRespon(db *gorm.DB) (error, []Data) {
 	}
 	return nil, res
 }
+
+func ResponForWiranesia(db *gorm.DB) (error, []Data) {
+	var datas []Data
+	query := `select xx.user_id,(select owner_name from subscribers where user_id = xx.user_id limit 1) owner_name, 
+	(select email from subscribers where user_id = xx.user_id limit 1) email, 
+	(select create_dtm from subscribers where user_id = xx.user_id limit 1) register, max(xx.create_dtm) as create_dtm,
+	(select concat(nama,'|', address) as Toko_name_address from outlets where user_id = xx.user_id limit 1) as Toko_name_address, 
+	(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1) as feedback, 
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1) as tanggal,
+	(select boolean as boolean from posts where phone = xx.user_id limit 1) as boolean,
+	(select id from posts where  phone = xx.user_id limit 1) as idpost, 
+	(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1) as images, 
+	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code
+	from(select y.user_id, max(y.create_dtm) as create_dtm from(select a.user_id, 
+	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
+	from subscribers a UNION select b.user_id, 
+	(select create_dtm from onlinesales where user_id = b.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
+	from subscribers b UNION select c.user_id, 
+	(select create_dtm from saved_orders where user_id = c.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1) 
+	from subscribers c) y group by y.user_id) xx where xx.user_id not in
+	(select yy.user_id from
+	(select y.user_id, max(y.create_dtm)from(select a.user_id, 
+	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1)
+	from subscribers a UNION select b.user_id, 
+	(select create_dtm from onlinesales where user_id = b.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1)
+	from subscribers b
+	UNION
+	select c.user_id, 
+	(select create_dtm from saved_orders where user_id = c.user_id and create_dtm > (current_date -7) order by create_dtm desc limit 1) 
+	from subscribers c) y where y.create_dtm is not null group by y.user_id) yy)  
+	GROUP BY xx.user_id, (select owner_name from subscribers where user_id = xx.user_id limit 1), (select email from subscribers where user_id = xx.user_id limit 1), (select create_dtm from subscribers where user_id = xx.user_id limit 1), 
+	(select concat(nama,'|', address) as nama from outlets where user_id = xx.user_id limit 1),(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1),
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1),(select boolean as boolean from posts where phone = xx.user_id limit 1),
+	(select id from posts where  phone = xx.user_id limit 1),(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1)
+	ORDER BY xx.user_id, (select owner_name from subscribers where user_id = xx.user_id limit 1), (select email from subscribers where user_id = xx.user_id limit 1),  (select create_dtm from subscribers where user_id = xx.user_id limit 1),
+	(select concat(nama,'|', address) as nama from outlets where user_id = xx.user_id limit 1),(select content as content from posts where content IS NOT NULL AND phone = xx.user_id limit 1),
+	(select updated_at from posts where content IS NOT NULL AND phone = xx.user_id limit 1),(select boolean as boolean from posts where phone = xx.user_id limit 1),
+	(select id from posts where  phone = xx.user_id limit 1),(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1)`
+	err := db.Raw(query).Scan(&datas).Error
+	if err != nil {
+		return err, nil
+	}
+	var res []Data
+	for i := 0; i < len(datas); i++ {
+		if datas[i].Referral_code == "Wiranesia" {
+			res = append(res, datas[i])
+		}
+	}
+	return nil, res
+}

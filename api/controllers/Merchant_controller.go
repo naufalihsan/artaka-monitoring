@@ -140,12 +140,12 @@ func (server *Server) SignInMerchant(email, password string) (map[string]interfa
 		fmt.Println("this is the error hashing the password: ", err)
 		return nil, err
 	}
-	token, err := auth.CreateToken(merchant.ID)
+	// token, err := auth.CreateToken(merchant.ID)
 	if err != nil {
 		fmt.Println("this is the error creating the token: ", err)
 		return nil, err
 	}
-	merchantData["token"] = token
+	// merchantData["token"] = token
 	merchantData["id"] = merchant.ID
 	merchantData["email"] = merchant.Email
 

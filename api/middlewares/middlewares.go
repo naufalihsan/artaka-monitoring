@@ -7,7 +7,7 @@ import (
 	"github.com/gunturbudikurniawan/Artaka/api/auth"
 )
 
-func TokenAuthMiddleware() gin.HandlerFunc {
+func TokenAuthMiddleware(role string) gin.HandlerFunc {
 	errList := make(map[string]string)
 	return func(c *gin.Context) {
 		err := auth.TokenValid(c.Request)
@@ -20,6 +20,20 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		if role == "admin" {
+			payload, _ := auth.ExtractTokenRole(c.Request)
+			if payload != "admin" {
+				errList["unauthorized"] = "Unauthorized"
+				c.JSON(http.StatusUnauthorized, gin.H{
+					"status": http.StatusUnauthorized,
+					"error":  errList,
+				})
+				c.Abort()
+				return
+			}
+		}
+
 		c.Next()
 	}
 }

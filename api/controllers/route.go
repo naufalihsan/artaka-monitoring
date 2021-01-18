@@ -11,7 +11,7 @@ func (s *Server) initialRoutes() {
 		v1.GET("/transactionOnline", s.GetLastOnline)
 		v1.GET("/NotYetContact", s.NotAll)
 		v1.GET("/Already", s.Already)
-		v1.GET("/ShowSleep", s.Showall)
+		v1.GET("/ShowSleep", middlewares.TokenAuthMiddleware("member"), s.Showall)
 		v1.GET("/NotRespon", s.LateRespon)
 		v1.GET("/ShowSalesPayment", s.ShowSalesPayment)
 		v1.GET("/ShowOnlineSalesPayment", s.ShowOnlineSalesPayment)
@@ -20,19 +20,24 @@ func (s *Server) initialRoutes() {
 		v1.GET("/getall/:id", s.GetMerchant)
 		v1.POST("/register", s.CreateAdmin)
 		v1.POST("/login", s.LoginAdmin)
-		v1.PUT("/update/:id", middlewares.TokenAuthMiddleware(), s.UpdateAdmin)
+		v1.PUT("/update/:id", s.UpdateAdmin)
 
 	}
+	v5 := s.Router.Group("/api/wiranesia")
+	{
+		v5.GET("/Show", s.ShowforWiranesia)
+	}
+
 	v2 := s.Router.Group("/api/merchant")
 	{
 		v2.POST("/register", s.CreateMerchants)
 		v2.POST("/login", s.LoginMerchant)
-		v2.PUT("/update/:id", middlewares.TokenAuthMiddleware(), s.UpdateMerchant)
+		v2.PUT("/update/:id", s.UpdateMerchant)
 	}
 	v3 := s.Router.Group("/api/post")
 	{
-		v3.POST("/create", middlewares.TokenAuthMiddleware(), s.CreatePost)
-		v3.PUT("/:id", middlewares.TokenAuthMiddleware(), s.UpdatePost)
+		v3.POST("/create", middlewares.TokenAuthMiddleware("admin"), s.CreatePost)
+		v3.PUT("/:id", middlewares.TokenAuthMiddleware("admin"), s.UpdatePost)
 		v3.GET("/getpost/:id", s.GetPost)
 
 	}
