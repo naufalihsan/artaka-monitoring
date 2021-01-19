@@ -1,14 +1,18 @@
 package controllers
 
+import (
+	"github.com/gunturbudikurniawan/Artaka/api/middlewares"
+)
+
 func (s *Server) initialRoutes() {
 	v1 := s.Router.Group("/api/admin")
 	{
 		v1.GET("/transactionsaved", s.GetLastSaved)
 		v1.GET("/transactionOnline", s.GetLastOnline)
-		v1.GET("/NotYetContact", s.NotAll)
-		v1.GET("/Already", s.Already)
-		v1.GET("/ShowSleep", s.Showall)
-		v1.GET("/NotRespon", s.LateRespon)
+		v1.GET("/NotYetContact", middlewares.TokenAuthMiddleware("admin"), s.NotAll)
+		v1.GET("/Already", middlewares.TokenAuthMiddleware("admin"), s.Already)
+		v1.GET("/ShowSleep", middlewares.TokenAuthMiddleware("admin"), s.Showall)
+		v1.GET("/NotRespon", middlewares.TokenAuthMiddleware("admin"), s.LateRespon)
 		v1.GET("/ShowSalesPayment", s.ShowSalesPayment)
 		v1.GET("/ShowOnlineSalesPayment", s.ShowOnlineSalesPayment)
 		v1.GET("/GetAllSubcribers", s.GetCertainSubscribers)
@@ -21,10 +25,10 @@ func (s *Server) initialRoutes() {
 	}
 	v5 := s.Router.Group("/api/wiranesia")
 	{
-		v5.GET("/NotYetContact", s.NotAllWiranesia)
-		v5.GET("/Already", s.AlreadyWiranesia)
-		v5.GET("/NotRespon", s.LateResponWiranesia)
-		v5.GET("/Show", s.ShowforWiranesia)
+		v5.GET("/NotYetContact", middlewares.TokenAuthMiddleware("nonadmin"), s.NotAllWiranesia)
+		v5.GET("/Already", middlewares.TokenAuthMiddleware("nonadmin"), s.AlreadyWiranesia)
+		v5.GET("/NotRespon", middlewares.TokenAuthMiddleware("nonadmin"), s.LateResponWiranesia)
+		v5.GET("/Show", middlewares.TokenAuthMiddleware("nonadmin"), s.ShowforWiranesia)
 	}
 
 	v2 := s.Router.Group("/api/merchant")
