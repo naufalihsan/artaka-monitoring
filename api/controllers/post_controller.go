@@ -336,7 +336,8 @@ func (server *Server) Showall(c *gin.Context) {
 	})
 }
 func (server *Server) ShowforWiranesia(c *gin.Context) {
-
+	token := c.Request.Header.Get("authorization")
+	fmt.Print("ini token", token)
 	err, datas := models.ResponForWiranesia(server.DB)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -353,6 +354,7 @@ func (server *Server) ShowforWiranesia(c *gin.Context) {
 		"error":    "null",
 	})
 }
+
 func (server *Server) LateRespon(c *gin.Context) {
 
 	err, datas := models.NotRespon(server.DB)
@@ -371,6 +373,26 @@ func (server *Server) LateRespon(c *gin.Context) {
 		"error":    "null",
 	})
 }
+
+func (server *Server) LateResponWiranesia(c *gin.Context) {
+
+	err, datas := models.NotResponWiranesia(server.DB)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Tidak Ada Merchant Yang tidak respon",
+			"response": "null",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}
+
 func (server *Server) NotAll(c *gin.Context) {
 
 	err, datas := models.Show(server.DB)
@@ -390,10 +412,47 @@ func (server *Server) NotAll(c *gin.Context) {
 		"error":    "null",
 	})
 }
+func (server *Server) NotAllWiranesia(c *gin.Context) {
 
+	err, datas := models.Showiranesia(server.DB)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Merchant Aktif Semua",
+			"response": "null",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}
 func (server *Server) Already(c *gin.Context) {
 
 	err, datas := models.Show1(server.DB)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":   "Failed",
+			"error":    "Not ALready contacted with admin",
+			"response": "null",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":   "Success",
+		"response": datas,
+		"error":    "null",
+	})
+}
+
+func (server *Server) AlreadyWiranesia(c *gin.Context) {
+
+	err, datas := models.Show2(server.DB)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{

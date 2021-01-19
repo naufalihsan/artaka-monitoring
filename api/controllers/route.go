@@ -1,9 +1,5 @@
 package controllers
 
-import (
-	"github.com/gunturbudikurniawan/Artaka/api/middlewares"
-)
-
 func (s *Server) initialRoutes() {
 	v1 := s.Router.Group("/api/admin")
 	{
@@ -11,7 +7,7 @@ func (s *Server) initialRoutes() {
 		v1.GET("/transactionOnline", s.GetLastOnline)
 		v1.GET("/NotYetContact", s.NotAll)
 		v1.GET("/Already", s.Already)
-		v1.GET("/ShowSleep", middlewares.TokenAuthMiddleware("member"), s.Showall)
+		v1.GET("/ShowSleep", s.Showall)
 		v1.GET("/NotRespon", s.LateRespon)
 		v1.GET("/ShowSalesPayment", s.ShowSalesPayment)
 		v1.GET("/ShowOnlineSalesPayment", s.ShowOnlineSalesPayment)
@@ -25,6 +21,9 @@ func (s *Server) initialRoutes() {
 	}
 	v5 := s.Router.Group("/api/wiranesia")
 	{
+		v5.GET("/NotYetContact", s.NotAllWiranesia)
+		v5.GET("/Already", s.AlreadyWiranesia)
+		v5.GET("/NotRespon", s.LateResponWiranesia)
 		v5.GET("/Show", s.ShowforWiranesia)
 	}
 
@@ -36,8 +35,8 @@ func (s *Server) initialRoutes() {
 	}
 	v3 := s.Router.Group("/api/post")
 	{
-		v3.POST("/create", middlewares.TokenAuthMiddleware("admin"), s.CreatePost)
-		v3.PUT("/:id", middlewares.TokenAuthMiddleware("admin"), s.UpdatePost)
+		v3.POST("/create", s.CreatePost)
+		v3.PUT("/:id", s.UpdatePost)
 		v3.GET("/getpost/:id", s.GetPost)
 
 	}

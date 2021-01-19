@@ -13,6 +13,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+//CreateToken: create jwt token
 func CreateToken(id uint32, role string) (string, error) {
 	claims := jwt.MapClaims{}
 	fmt.Println(id, role)
