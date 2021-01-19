@@ -11,6 +11,7 @@ func TokenAuthMiddleware(role string) gin.HandlerFunc {
 	errList := make(map[string]string)
 	return func(c *gin.Context) {
 		err := auth.TokenValid(c.Request)
+
 		if err != nil {
 			errList["unauthorized"] = "Unauthorized"
 			c.JSON(http.StatusUnauthorized, gin.H{
@@ -24,6 +25,18 @@ func TokenAuthMiddleware(role string) gin.HandlerFunc {
 		if role == "admin" {
 			payload, _ := auth.ExtractTokenRole(c.Request)
 			if payload != "admin" {
+				errList["unauthorized"] = "Unauthorized"
+				c.JSON(http.StatusUnauthorized, gin.H{
+					"status": http.StatusUnauthorized,
+					"error":  errList,
+				})
+				c.Abort()
+				return
+			}
+		}
+		if role == "nonadmin" {
+			payload, _ := auth.ExtractTokenRole(c.Request)
+			if payload != "member" {
 				errList["unauthorized"] = "Unauthorized"
 				c.JSON(http.StatusUnauthorized, gin.H{
 					"status": http.StatusUnauthorized,
