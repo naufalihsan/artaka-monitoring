@@ -36,7 +36,7 @@ func TokenAuthMiddleware(role string) gin.HandlerFunc {
 		}
 		if role == "nonadmin" {
 			payload, _ := auth.ExtractTokenRole(c.Request)
-			if payload != "member" {
+			if payload != "nonadmin" {
 				errList["unauthorized"] = "Unauthorized"
 				c.JSON(http.StatusUnauthorized, gin.H{
 					"status": http.StatusUnauthorized,

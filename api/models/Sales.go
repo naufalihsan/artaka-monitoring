@@ -292,7 +292,7 @@ func Show2(db *gorm.DB) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Referral_code == "Wiranesia" && datas[i].Feedback != "" || datas[i].Boolean != "" {
+		if datas[i].Feedback != "" || datas[i].Boolean != "" && datas[i].Referral_code == "Wiranesia" {
 			res = append(res, datas[i])
 		}
 	}
