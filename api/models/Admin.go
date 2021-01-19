@@ -33,7 +33,6 @@ func (a *Admin) BeforeSave() error {
 }
 
 func (a *Admin) Prepare() {
-	a.Role = "admin"
 	a.Username = html.EscapeString(strings.TrimSpace(a.Username))
 	a.Email = html.EscapeString(strings.TrimSpace(a.Email))
 	a.Phone = html.EscapeString(strings.TrimSpace(a.Phone))
