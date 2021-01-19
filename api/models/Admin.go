@@ -20,7 +20,7 @@ type Admin struct {
 	Create_dtm      time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"create_dtm`
 	Email           string    `gorm:"size:100;not null;unique" json:"email"`
 	Secret_password string    `json:"secret_password"`
-	Role            string    `gorm:"size:10;not null" json:"role"`
+	Role            string    `gorm:"default:'admin';size:10;not null" json:"role"`
 }
 
 func (a *Admin) BeforeSave() error {
@@ -33,7 +33,7 @@ func (a *Admin) BeforeSave() error {
 }
 
 func (a *Admin) Prepare() {
-	a.Role = "guest"
+	a.Role = "admin"
 	a.Username = html.EscapeString(strings.TrimSpace(a.Username))
 	a.Email = html.EscapeString(strings.TrimSpace(a.Email))
 	a.Phone = html.EscapeString(strings.TrimSpace(a.Phone))
