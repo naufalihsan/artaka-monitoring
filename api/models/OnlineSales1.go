@@ -8,7 +8,7 @@ import (
 )
 
 type Onlinesales1 struct {
-	ID               uint32          `gorm:"primary_key;auto_increment" json:"id"`
+	ID               uint            `gorm:"primary_key;auto_increment" json:"id"`
 	Create_dtm       time.Time       `json:"create_dtm"`
 	Sales_id         string          `json:"sales_id"`
 	User_id          string          `json:"user_id"`

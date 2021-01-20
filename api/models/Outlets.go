@@ -6,7 +6,7 @@ import (
 )
 
 type Outlets struct {
-	ID                     uint32          `gorm:"primary_key;auto_increment" json:"id"`
+	ID                     uint            `gorm:"primary_key;auto_increment" json:"id"`
 	Create_dtm             time.Time       `json:"create_dtm"`
 	User_id                string          `json:"user_id"`
 	Outlet_id              string          `json:"outlet_id"`
