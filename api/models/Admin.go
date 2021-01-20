@@ -20,7 +20,8 @@ type Admin struct {
 	Create_dtm      time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"create_dtm`
 	Email           string    `gorm:"size:100;not null;unique" json:"email"`
 	Secret_password string    `json:"secret_password"`
-	Role            string    `gorm:"size:10;not null" json:"role"`
+	Role            string    `gorm:json:"role"`
+	Referral_code   string    `gorm: json:"referral_code"`
 }
 
 func (a *Admin) BeforeSave() error {
@@ -34,10 +35,10 @@ func (a *Admin) BeforeSave() error {
 
 func (a *Admin) Prepare() {
 	a.Username = html.EscapeString(strings.TrimSpace(a.Username))
-	a.Role = "admin"
 	a.Email = html.EscapeString(strings.TrimSpace(a.Email))
 	a.Phone = html.EscapeString(strings.TrimSpace(a.Phone))
 	a.Create_dtm = time.Now()
+
 }
 
 func (a *Admin) Validate(action string) map[string]string {
@@ -117,6 +118,7 @@ func (a *Admin) SaveAdmin(db *gorm.DB) (*Admin, error) {
 	if err != nil {
 		return &Admin{}, err
 	}
+
 	return a, nil
 }
 

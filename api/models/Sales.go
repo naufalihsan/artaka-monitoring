@@ -11,7 +11,7 @@ import (
 )
 
 type Sales struct {
-	ID             uint32          `gorm:"primary_key;auto_increment" json:"id"`
+	ID             uint            `gorm:"primary_key;auto_increment" json:"id"`
 	CreateDTM      time.Time       `json:"create_dtm"`
 	SalesID        string          `json:"sales_id"`
 	UserID         string          `json:"user_id"`
