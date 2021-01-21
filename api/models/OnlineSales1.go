@@ -35,6 +35,7 @@ type Onlinesales1 struct {
 	Points_redeem    int             `json:"points_redeem"`
 	Order_status     string          `json:"order_status"`
 	Shipment_number  string          `json:"shipment_number"`
+	Referral_code    string          `json:"referral_code"`
 }
 
 func ShowPaymentMethodVAOnlineSales(db *gorm.DB) (error, []Onlinesales1) {
