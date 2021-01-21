@@ -39,7 +39,8 @@ type Onlinesales1 struct {
 
 func ShowPaymentMethodVAOnlineSales(db *gorm.DB) (error, []Onlinesales1) {
 	var datas []Onlinesales1
-	query := `SELECT * FROM onlinesales WHERE payment_method LIKE '%Virtual Account%'`
+	query := `select o.*,s.referral_code from onlinesales o join subscribers s on o.user_id = s.user_id`
+
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
