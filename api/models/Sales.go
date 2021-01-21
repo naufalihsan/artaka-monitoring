@@ -300,6 +300,7 @@ func Show2(db *gorm.DB) (error, []Data) {
 }
 func Allshow(db *gorm.DB) (error, []Data) {
 	var datas []Data
+
 	query := `select xx.user_id,(select owner_name from subscribers where user_id = xx.user_id limit 1) owner_name, 
 	(select email from subscribers where user_id = xx.user_id limit 1) email, 
 	(select create_dtm from subscribers where user_id = xx.user_id limit 1) register, max(xx.create_dtm) as create_dtm,
