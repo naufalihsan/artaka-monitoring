@@ -140,10 +140,11 @@ func (server *Server) SignInByEmail(email, password string) (map[string]interfac
 	}
 	adminData["token"] = token
 	adminData["id"] = admin.ID
-	adminData["email"] = admin.Email
+	// adminData["email"] = admin.Email
 	adminData["username"] = admin.Username
-	adminData["phone"] = admin.Phone
-
+	// adminData["phone"] = admin.Phone
+	adminData["referral_code"] = admin.Referral_code
+	adminData["role"] = admin.Role
 	return adminData, nil
 }
 func (server *Server) SignInByPhone(phone, password string) (map[string]interface{}, error) {
@@ -170,11 +171,11 @@ func (server *Server) SignInByPhone(phone, password string) (map[string]interfac
 	}
 	adminData["token"] = token
 	adminData["id"] = admin.ID
-	adminData["email"] = admin.Email
-	adminData["phone"] = admin.Phone
-
+	// adminData["email"] = admin.Email
+	// adminData["phone"] = admin.Phone
 	adminData["username"] = admin.Username
-
+	adminData["referral_code"] = admin.Referral_code
+	adminData["role"] = admin.Role
 	return adminData, nil
 }
 
