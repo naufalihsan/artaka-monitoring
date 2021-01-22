@@ -317,9 +317,36 @@ func (server *Server) GetUserPosts(c *gin.Context) {
 		"response": posts,
 	})
 }
-func (server *Server) Showall(c *gin.Context) {
+func (server *Server) SearchReferral(referral_code string) (map[string]interface{}, error) {
+	var err error
 
-	err, datas := models.Allshow(server.DB)
+	merchantData := make(map[string]interface{})
+
+	merchants := models.Data{}
+
+	err = server.DB.Debug().Model(models.Data{}).Where("referral_code = ?", referral_code).Take(&merchants).Error
+	if err != nil {
+		fmt.Println("this is the error getting the Data: ", err)
+		return nil, err
+	}
+	return merchantData, nil
+}
+
+func (server *Server) Showall(c *gin.Context) {
+	data := models.Data{}
+	body, err := ioutil.ReadAll(c.Request.Body)
+	var merchantsData interface{}
+	merchantsData, err = server.SearchReferral(data.Referral_code)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusOK, gin.H{
+			"status":   "Failed",
+			"error":    "Tidak ada Referral Code sesuai",
+			"response": "null",
+		})
+		return
+	}
+	err, merchantsData := models.Allshow(server.DB)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
@@ -331,13 +358,13 @@ func (server *Server) Showall(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":   "Success",
-		"response": datas,
+		"response": merchantsData,
 		"error":    "null",
 	})
 }
+
 func (server *Server) ShowforWiranesia(c *gin.Context) {
-	token := c.Request.Header.Get("authorization")
-	fmt.Print("ini token", token)
+
 	err, datas := models.ResponForWiranesia(server.DB)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{

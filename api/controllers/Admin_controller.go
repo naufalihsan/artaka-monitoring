@@ -133,7 +133,7 @@ func (server *Server) SignInByEmail(email, password string) (map[string]interfac
 		fmt.Println("this is the error hashing the password: ", err)
 		return nil, err
 	}
-	token, err := auth.CreateToken(admin.ID)
+	token, err := auth.CreateToken(admin)
 	if err != nil {
 		fmt.Println("this is the error creating the token: ", err)
 		return nil, err
@@ -147,6 +147,7 @@ func (server *Server) SignInByEmail(email, password string) (map[string]interfac
 	adminData["role"] = admin.Role
 	return adminData, nil
 }
+
 func (server *Server) SignInByPhone(phone, password string) (map[string]interface{}, error) {
 	var err error
 
@@ -164,7 +165,7 @@ func (server *Server) SignInByPhone(phone, password string) (map[string]interfac
 		fmt.Println("this is the error hashing the password: ", err)
 		return nil, err
 	}
-	token, err := auth.CreateToken(admin.ID)
+	token, err := auth.CreateToken(admin)
 	if err != nil {
 		fmt.Println("this is the error creating the token: ", err)
 		return nil, err
