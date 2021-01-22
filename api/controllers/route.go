@@ -7,7 +7,7 @@ func (s *Server) initialRoutes() {
 		v1.GET("/transactionOnline", s.GetLastOnline)
 		v1.GET("/NotYetContact", s.NotAll)
 		v1.GET("/Already", s.Already)
-		v1.GET("/ShowSleep", s.Showall)
+		v1.POST("/ShowSleep", s.Showall)
 		v1.GET("/NotRespon", s.LateRespon)
 		v1.GET("/ShowSalesPayment", s.ShowSalesPayment)
 		v1.GET("/ShowOnlineSalesPayment", s.ShowOnlineSalesPayment)

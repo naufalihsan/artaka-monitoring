@@ -8,14 +8,17 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/gunturbudikurniawan/Artaka/api/models"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-func CreateToken(id uint32) (string, error) {
+func CreateToken(admin models.Admin) (string, error) {
 	claims := jwt.MapClaims{}
-	claims["authorized"] = true
-	claims["id"] = id
+	claims["admin"] = admin
+	claims["exp"] = time.Now().Add(time.Minute * 60 * 24 * 30).Unix() // 1 month
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(os.Getenv("API_SECRET")))
 }
