@@ -6,19 +6,18 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
-	"time"
-
-	"github.com/gunturbudikurniawan/Artaka/api/models"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/spf13/cast"
 )
 
-func CreateToken(admin models.Admin) (string, error) {
+func CreateToken(id uint32, referral_code string, role string) (string, error) {
 	claims := jwt.MapClaims{}
-	claims["admin"] = admin
-	claims["exp"] = time.Now().Add(time.Minute * 60 * 24 * 30).Unix() // 1 month
+	claims["authorized"] = true
+	claims["id"] = id
+	claims["referral_code"] = referral_code
+	claims["role"] = role
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(os.Getenv("API_SECRET")))
 }
@@ -53,7 +52,12 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
-func ExtractTokenID(r *http.Request) (uint32, error) {
+func ExtractTokenID(r *http.Request) (uint32, string, string, error) {
+	var (
+		uid           uint32
+		referral_code string
+		role          string
+	)
 
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -63,17 +67,18 @@ func ExtractTokenID(r *http.Request) (uint32, error) {
 		return []byte(os.Getenv("API_SECRET")), nil
 	})
 	if err != nil {
-		return 0, err
+		return uid, referral_code, role, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		uid, err := strconv.ParseUint(fmt.Sprintf("%.0f", claims["id"]), 10, 32)
-		if err != nil {
-			return 0, err
-		}
-		return uint32(uid), nil
+		//uid, err := strconv.ParseUint(fmt.Sprintf("%.0f", claims["id"]), 10, 32)
+		uid := cast.ToUint32(claims["id"])
+		referral_code := cast.ToString(claims["referral_code"])
+		role := cast.ToString(claims["role"])
+
+		return uid, referral_code, role, nil
 	}
-	return 0, nil
+	return uid, referral_code, role, nil
 }
 
 func Pretty(data interface{}) {

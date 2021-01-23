@@ -133,21 +133,19 @@ func (server *Server) SignInByEmail(email, password string) (map[string]interfac
 		fmt.Println("this is the error hashing the password: ", err)
 		return nil, err
 	}
-	token, err := auth.CreateToken(admin)
+	token, err := auth.CreateToken(admin.ID, admin.Referral_code, admin.Role)
 	if err != nil {
 		fmt.Println("this is the error creating the token: ", err)
 		return nil, err
 	}
 	adminData["token"] = token
 	adminData["id"] = admin.ID
-	// adminData["email"] = admin.Email
+	adminData["email"] = admin.Email
 	adminData["username"] = admin.Username
-	// adminData["phone"] = admin.Phone
-	adminData["referral_code"] = admin.Referral_code
-	adminData["role"] = admin.Role
+	adminData["phone"] = admin.Phone
+
 	return adminData, nil
 }
-
 func (server *Server) SignInByPhone(phone, password string) (map[string]interface{}, error) {
 	var err error
 
@@ -165,18 +163,18 @@ func (server *Server) SignInByPhone(phone, password string) (map[string]interfac
 		fmt.Println("this is the error hashing the password: ", err)
 		return nil, err
 	}
-	token, err := auth.CreateToken(admin)
+	token, err := auth.CreateToken(admin.ID, admin.Referral_code, admin.Role)
 	if err != nil {
 		fmt.Println("this is the error creating the token: ", err)
 		return nil, err
 	}
 	adminData["token"] = token
 	adminData["id"] = admin.ID
-	// adminData["email"] = admin.Email
-	// adminData["phone"] = admin.Phone
+	adminData["email"] = admin.Email
+	adminData["phone"] = admin.Phone
+
 	adminData["username"] = admin.Username
-	adminData["referral_code"] = admin.Referral_code
-	adminData["role"] = admin.Role
+
 	return adminData, nil
 }
 
@@ -197,7 +195,7 @@ func (server *Server) UpdateAdmin(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, restErr)
 		return
 	}
-	tokenID, err := auth.ExtractTokenID(c.Request)
+	tokenID, _, _, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusOK, gin.H{

@@ -11,6 +11,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/mmuflih/go-text-log v1.0.0
 	github.com/mmuflih/golib v1.1.2
+	github.com/spf13/cast v1.3.0
 	github.com/twinj/uuid v1.0.0
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
 )
