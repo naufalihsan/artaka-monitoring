@@ -111,17 +111,14 @@ func (a *Admin) Validate(action string) map[string]string {
 	}
 	return errorMessages
 }
+
 func (a *Admin) SaveAdmin(db *gorm.DB) (*Admin, error) {
-	if a.Referral_code == "" {
-		a.Role = "ADMIN"
-	} else {
-		a.Role = "NONADMIN"
-	}
 	var err error
 	err = db.Debug().Create(&a).Error
 	if err != nil {
 		return &Admin{}, err
 	}
+
 	return a, nil
 }
 

@@ -43,7 +43,7 @@ func (server *Server) CreatePost(c *gin.Context) {
 		return
 
 	}
-	uid, err := auth.ExtractTokenID(c.Request)
+	uid, _, _, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -244,7 +244,7 @@ func (server *Server) DeletePost(c *gin.Context) {
 	fmt.Println("this is delete post sir")
 
 	// Is this user authenticated?
-	uid, err := auth.ExtractTokenID(c.Request)
+	uid, _, _, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -317,36 +317,23 @@ func (server *Server) GetUserPosts(c *gin.Context) {
 		"response": posts,
 	})
 }
-func (server *Server) SearchReferral(referral_code string) (map[string]interface{}, error) {
-	var err error
-
-	merchantData := make(map[string]interface{})
-
-	merchants := models.Data{}
-
-	err = server.DB.Debug().Model(models.Data{}).Where("referral_code = ?", referral_code).Take(&merchants).Error
-	if err != nil {
-		fmt.Println("this is the error getting the Data: ", err)
-		return nil, err
-	}
-	return merchantData, nil
-}
-
 func (server *Server) Showall(c *gin.Context) {
-	data := models.Data{}
-	body, err := ioutil.ReadAll(c.Request.Body)
-	var merchantsData interface{}
-	merchantsData, err = server.SearchReferral(data.Referral_code)
+
+	// Is this user authenticated?
+	uid, referral_code, role, err := auth.ExtractTokenID(c.Request)
+	fmt.Println(referral_code)
+	fmt.Println(role)
+	fmt.Println(uid)
 	if err != nil {
-		log.Println(err)
-		c.JSON(http.StatusOK, gin.H{
-			"status":   "Failed",
-			"error":    "Tidak ada Referral Code sesuai",
-			"response": "null",
+		errList["Unauthorized"] = "Unauthorized"
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": http.StatusUnauthorized,
+			"error":  errList,
 		})
 		return
 	}
-	err, merchantsData := models.Allshow(server.DB)
+
+	err, datas := models.Allshow(server.DB, referral_code, role)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
@@ -358,11 +345,10 @@ func (server *Server) Showall(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":   "Success",
-		"response": merchantsData,
+		"response": datas,
 		"error":    "null",
 	})
 }
-
 func (server *Server) ShowforWiranesia(c *gin.Context) {
 
 	err, datas := models.ResponForWiranesia(server.DB)

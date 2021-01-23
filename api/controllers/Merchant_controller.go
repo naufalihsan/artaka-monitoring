@@ -167,7 +167,7 @@ func (server *Server) UpdateMerchant(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, restErr)
 		return
 	}
-	tokenID, err := auth.ExtractTokenID(c.Request)
+	tokenID, _, _, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusOK, gin.H{
@@ -312,7 +312,7 @@ func (server *Server) CreateSavedOrder(c *gin.Context) {
 		return
 
 	}
-	uid, err := auth.ExtractTokenID(c.Request)
+	uid, _, _, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		log.Println(err)
 		errList["Unauthorized"] = "Unauthorized"
@@ -386,7 +386,7 @@ func (server *Server) CreateSales(c *gin.Context) {
 		return
 
 	}
-	uid, err := auth.ExtractTokenID(c.Request)
+	uid, _, _, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusOK, gin.H{
@@ -458,7 +458,7 @@ func (server *Server) CreateOnlineSales(c *gin.Context) {
 		return
 
 	}
-	uid, err := auth.ExtractTokenID(c.Request)
+	uid, _, _, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusOK, gin.H{
