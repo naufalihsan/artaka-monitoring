@@ -114,9 +114,9 @@ func (a *Admin) Validate(action string) map[string]string {
 
 func (a *Admin) SaveAdmin(db *gorm.DB) (*Admin, error) {
 	if a.Referral_code == "" {
-		a.Role == "ADMIN"
+		a.Role = "ADMIN"
 	} else {
-		a.Role == "NONADMIN"
+		a.Role = "NONADMIN"
 	}
 	var err error
 	err = db.Debug().Create(&a).Error
