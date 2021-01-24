@@ -349,47 +349,22 @@ func (server *Server) Showall(c *gin.Context) {
 		"error":    "null",
 	})
 }
-func (server *Server) ShowforWiranesia(c *gin.Context) {
-
-	err, datas := models.ResponForWiranesia(server.DB)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":   "Failed",
-			"error":    "Tidak Ada Merchant Yang tidak respon",
-			"response": "null",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":   "Success",
-		"response": datas,
-		"error":    "null",
-	})
-}
 
 func (server *Server) LateRespon(c *gin.Context) {
-
-	err, datas := models.NotRespon(server.DB)
+	uid, referral_code, role, err := auth.ExtractTokenID(c.Request)
+	fmt.Println(referral_code)
+	fmt.Println(role)
+	fmt.Println(uid)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":   "Failed",
-			"error":    "Tidak Ada Merchant Yang tidak respon",
-			"response": "null",
+		errList["Unauthorized"] = "Unauthorized"
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": http.StatusUnauthorized,
+			"error":  errList,
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status":   "Success",
-		"response": datas,
-		"error":    "null",
-	})
-}
-
-func (server *Server) LateResponWiranesia(c *gin.Context) {
-
-	err, datas := models.NotResponWiranesia(server.DB)
+	err, datas := models.NotRespon(server.DB, referral_code)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
@@ -407,8 +382,21 @@ func (server *Server) LateResponWiranesia(c *gin.Context) {
 }
 
 func (server *Server) NotAll(c *gin.Context) {
+	// Is this user authenticated?
+	uid, referral_code, role, err := auth.ExtractTokenID(c.Request)
+	fmt.Println(referral_code)
+	fmt.Println(role)
+	fmt.Println(uid)
+	if err != nil {
+		errList["Unauthorized"] = "Unauthorized"
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": http.StatusUnauthorized,
+			"error":  errList,
+		})
+		return
+	}
 
-	err, datas := models.Show(server.DB)
+	err, datas := models.Show(server.DB, referral_code)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -425,28 +413,23 @@ func (server *Server) NotAll(c *gin.Context) {
 		"error":    "null",
 	})
 }
-func (server *Server) NotAllWiranesia(c *gin.Context) {
 
-	err, datas := models.Showiranesia(server.DB)
-
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":   "Failed",
-			"error":    "Merchant Aktif Semua",
-			"response": "null",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":   "Success",
-		"response": datas,
-		"error":    "null",
-	})
-}
 func (server *Server) Already(c *gin.Context) {
+	// Is this user authenticated?
+	uid, referral_code, role, err := auth.ExtractTokenID(c.Request)
+	fmt.Println(referral_code)
+	fmt.Println(role)
+	fmt.Println(uid)
+	if err != nil {
+		errList["Unauthorized"] = "Unauthorized"
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": http.StatusUnauthorized,
+			"error":  errList,
+		})
+		return
+	}
 
-	err, datas := models.Show1(server.DB)
+	err, datas := models.Show1(server.DB, referral_code)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -463,28 +446,9 @@ func (server *Server) Already(c *gin.Context) {
 	})
 }
 
-func (server *Server) AlreadyWiranesia(c *gin.Context) {
+func (server *Server) ShowAllReferral(c *gin.Context) {
 
-	err, datas := models.Show2(server.DB)
-
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":   "Failed",
-			"error":    "Not ALready contacted with admin",
-			"response": "null",
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"status":   "Success",
-		"response": datas,
-		"error":    "null",
-	})
-}
-
-func (server *Server) ShowSalesPayment(c *gin.Context) {
-
-	err, datas := models.ShowPaymentMethodSales(server.DB)
+	err, datas := models.ShowReferralCode(server.DB)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
@@ -502,8 +466,21 @@ func (server *Server) ShowSalesPayment(c *gin.Context) {
 }
 
 func (server *Server) ShowOnlineSalesPayment(c *gin.Context) {
+	// Is this user authenticated?
+	uid, referral_code, role, err := auth.ExtractTokenID(c.Request)
+	fmt.Println(referral_code)
+	fmt.Println(role)
+	fmt.Println(uid)
+	if err != nil {
+		errList["Unauthorized"] = "Unauthorized"
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": http.StatusUnauthorized,
+			"error":  errList,
+		})
+		return
+	}
 
-	err, datas := models.ShowPaymentMethodVAOnlineSales(server.DB)
+	err, datas := models.ShowPaymentMethodVAOnlineSales(server.DB, referral_code, role)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",

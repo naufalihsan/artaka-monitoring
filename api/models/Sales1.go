@@ -31,9 +31,9 @@ type Sales1 struct {
 	Points_redeem    int             `json:"points_redeem"`
 }
 
-func ShowPaymentMethodSales(db *gorm.DB) (error, []Sales1) {
+func ShowReferralCode(db *gorm.DB) (error, []Sales1) {
 	var datas []Sales1
-	query := `SELECT * FROM sales WHERE payment_method='Tunai' OR payment_method='Uang Pas'`
+	query := `SELECT referral_code FROM subscribers`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
