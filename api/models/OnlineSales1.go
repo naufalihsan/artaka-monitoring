@@ -38,14 +38,23 @@ type Onlinesales1 struct {
 	Referral_code    string          `json:"referral_code"`
 }
 
-func ShowPaymentMethodVAOnlineSales(db *gorm.DB) (error, []Onlinesales1) {
+func ShowPaymentMethodVAOnlineSales(db *gorm.DB, referral_code string, role string) (error, []Onlinesales1) {
 	var datas []Onlinesales1
-	query := `select o.*,s.referral_code from onlinesales o join subscribers s on o.user_id = s.user_id`
-
+	query := `select o.*,s.referral_code 
+	from onlinesales o join subscribers s on o.user_id = s.user_id
+	where o.payment_method like '%Virtual Account%'`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
 	}
+	var res []Onlinesales1
+	for i := 0; i < len(datas); i++ {
+		if role == "ADMIN" {
+			res = append(res, datas[i])
+		} else if role != "ADMIN" && datas[i].Referral_code == referral_code {
+			res = append(res, datas[i])
+		}
 
-	return nil, datas
+	}
+	return nil, res
 }

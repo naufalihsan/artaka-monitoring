@@ -9,7 +9,7 @@ func (s *Server) initialRoutes() {
 		v1.GET("/Already", s.Already)
 		v1.POST("/ShowSleep", s.Showall)
 		v1.GET("/NotRespon", s.LateRespon)
-		v1.GET("/ShowSalesPayment", s.ShowSalesPayment)
+		v1.GET("/ShowReferral", s.ShowAllReferral)
 		v1.GET("/ShowOnlineSalesPayment", s.ShowOnlineSalesPayment)
 		v1.GET("/GetAllSubcribers", s.GetCertainSubscribers)
 
@@ -18,13 +18,6 @@ func (s *Server) initialRoutes() {
 		v1.POST("/login", s.LoginAdmin)
 		v1.PUT("/update/:id", s.UpdateAdmin)
 
-	}
-	v5 := s.Router.Group("/api/wiranesia")
-	{
-		v5.GET("/NotYetContact", s.NotAllWiranesia)
-		v5.GET("/Already", s.AlreadyWiranesia)
-		v5.GET("/NotRespon", s.LateResponWiranesia)
-		v5.GET("/Show", s.ShowforWiranesia)
 	}
 
 	v2 := s.Router.Group("/api/merchant")
