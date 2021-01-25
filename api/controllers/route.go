@@ -5,13 +5,13 @@ func (s *Server) initialRoutes() {
 	{
 		v1.GET("/transactionsaved", s.GetLastSaved)
 		v1.GET("/transactionOnline", s.GetLastOnline)
-		v1.GET("/NotYetContact", s.NotAll)
-		v1.GET("/Already", s.Already)
+		v1.POST("/NotYetContact", s.NotAll)
+		v1.POST("/Already", s.Already)
 		v1.POST("/ShowSleep", s.Showall)
-		v1.GET("/NotRespon", s.LateRespon)
+		v1.POST("/NotRespon", s.LateRespon)
 		v1.GET("/ShowReferral", s.ShowAllReferral)
-		v1.GET("/ShowOnlineSalesPayment", s.ShowOnlineSalesPayment)
-		v1.GET("/GetAllSubcribers", s.GetCertainSubscribers)
+		v1.POST("/ShowOnlineSalesPayment", s.ShowOnlineSalesPayment)
+		v1.POST("/GetAllSubcribers", s.GetCertainSubscribers)
 
 		v1.GET("/getall/:id", s.GetMerchant)
 		v1.POST("/register", s.CreateAdmin)
