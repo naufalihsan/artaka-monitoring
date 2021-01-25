@@ -30,14 +30,22 @@ type Sales1 struct {
 	Reward_id        string          `json:"Reward_id"`
 	Points_redeem    int             `json:"points_redeem"`
 }
+type Referral struct {
+	Referral_code string `gorm: json:"referral_code"`
+}
 
-func ShowReferralCode(db *gorm.DB) (error, []Sales1) {
-	var datas []Sales1
+func ShowReferralCode(db *gorm.DB) (error, []Referral) {
+	var datas []Referral
 	query := `SELECT referral_code FROM subscribers`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
 	}
-
-	return nil, datas
+	var res []Data
+	for i := 0; i < len(datas); i++ {
+		if datas[i].Referral_code != "" {
+			res = append(res, datas[i])
+		}
+	}
+	return nil, res
 }
