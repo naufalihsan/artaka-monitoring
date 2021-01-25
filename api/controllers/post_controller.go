@@ -320,10 +320,7 @@ func (server *Server) GetUserPosts(c *gin.Context) {
 func (server *Server) Showall(c *gin.Context) {
 
 	// Is this user authenticated?
-	uid, referral_code, role, err := auth.ExtractTokenID(c.Request)
-	fmt.Println(referral_code)
-	fmt.Println(role)
-	fmt.Println(uid)
+	_, referral_code, role, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -364,7 +361,7 @@ func (server *Server) LateRespon(c *gin.Context) {
 		return
 	}
 
-	err, datas := models.NotRespon(server.DB, referral_code)
+	err, datas := models.NotRespon(server.DB, referral_code, role)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
@@ -383,10 +380,7 @@ func (server *Server) LateRespon(c *gin.Context) {
 
 func (server *Server) NotAll(c *gin.Context) {
 	// Is this user authenticated?
-	uid, referral_code, role, err := auth.ExtractTokenID(c.Request)
-	fmt.Println(referral_code)
-	fmt.Println(role)
-	fmt.Println(uid)
+	_, referral_code, role, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -396,7 +390,7 @@ func (server *Server) NotAll(c *gin.Context) {
 		return
 	}
 
-	err, datas := models.Show(server.DB, referral_code)
+	err, datas := models.Show(server.DB, referral_code, role)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -429,7 +423,7 @@ func (server *Server) Already(c *gin.Context) {
 		return
 	}
 
-	err, datas := models.Show1(server.DB, referral_code)
+	err, datas := models.Show1(server.DB, referral_code, role)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{

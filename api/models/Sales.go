@@ -97,7 +97,7 @@ func (w *Sales) FindSales(db *gorm.DB) (*Sales, error) {
 	return w, err
 }
 
-func Show(db *gorm.DB, referral_code string) (error, []Data) {
+func Show(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	var datas []Data
 
 	query := `select xx.user_id,(select owner_name from subscribers where user_id = xx.user_id limit 1) owner_name, 
@@ -141,9 +141,11 @@ func Show(db *gorm.DB, referral_code string) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Boolean == "" && datas[i].Feedback == "" && datas[i].Referral_code == "" {
-			res = append(res, datas[i])
-		} else if datas[i].Boolean == "" && datas[i].Feedback == "" && datas[i].Referral_code == referral_code {
+		if role == "ADMIN" {
+			if datas[i].Referral_code != "" || datas[i].Referral_code == "" && datas[i].Boolean == "" && datas[i].Feedback == "" {
+				res = append(res, datas[i])
+			}
+		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) && datas[i].Boolean == "" && datas[i].Feedback == "" {
 			res = append(res, datas[i])
 		}
 
@@ -151,7 +153,7 @@ func Show(db *gorm.DB, referral_code string) (error, []Data) {
 	return nil, res
 }
 
-func Show1(db *gorm.DB, referral_code string) (error, []Data) {
+func Show1(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	var datas []Data
 	query := `select xx.user_id,(select owner_name from subscribers where user_id = xx.user_id limit 1) owner_name, 
 	(select email from subscribers where user_id = xx.user_id limit 1) email, 
@@ -194,9 +196,11 @@ func Show1(db *gorm.DB, referral_code string) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Feedback != "" || datas[i].Boolean != "" && datas[i].Referral_code == "" {
-			res = append(res, datas[i])
-		} else if datas[i].Feedback != "" || datas[i].Boolean != "" && datas[i].Referral_code == referral_code {
+		if role == "ADMIN" {
+			if datas[i].Referral_code != "" || datas[i].Referral_code == "" && datas[i].Feedback != "" || datas[i].Boolean != "" {
+				res = append(res, datas[i])
+			}
+		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) && datas[i].Feedback != "" || datas[i].Boolean != "" {
 			res = append(res, datas[i])
 		}
 	}
@@ -258,7 +262,7 @@ func Allshow(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	return nil, res
 }
 
-func NotRespon(db *gorm.DB, referral_code string) (error, []Data) {
+func NotRespon(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	var datas []Data
 	query := `select xx.user_id,(select owner_name from subscribers where user_id = xx.user_id limit 1) owner_name, 
 	(select email from subscribers where user_id = xx.user_id limit 1) email, 
@@ -301,9 +305,11 @@ func NotRespon(db *gorm.DB, referral_code string) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Boolean != "1" && datas[i].Referral_code == "" {
-			res = append(res, datas[i])
-		} else if datas[i].Boolean != "1" && datas[i].Referral_code == referral_code {
+		if role == "ADMIN" {
+			if datas[i].Boolean != "1" && datas[i].Referral_code != "" || datas[i].Referral_code == "" {
+				res = append(res, datas[i])
+			}
+		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) && datas[i].Boolean != "1" {
 			res = append(res, datas[i])
 		}
 	}
