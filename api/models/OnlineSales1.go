@@ -51,7 +51,7 @@ func ShowPaymentMethodVAOnlineSales(db *gorm.DB, referral_code string, role stri
 	for i := 0; i < len(datas); i++ {
 		if role == "ADMIN" {
 			res = append(res, datas[i])
-		} else if role != "ADMIN" && datas[i].Referral_code == referral_code {
+		} else if datas[i].Referral_code == referral_code {
 			res = append(res, datas[i])
 		}
 
