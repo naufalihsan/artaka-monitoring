@@ -507,8 +507,18 @@ func (server *Server) CreateOnlineSales(c *gin.Context) {
 	})
 }
 func (server *Server) GetCertainSubscribers(c *gin.Context) {
+	// Is this user authenticated?
+	_, referral_code, role, err := auth.ExtractTokenID(c.Request)
+	if err != nil {
+		errList["Unauthorized"] = "Unauthorized"
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": http.StatusUnauthorized,
+			"error":  errList,
+		})
+		return
+	}
 
-	err, datas := models.ShowSubscribers(server.DB)
+	err, datas := models.ShowSubscribers(server.DB, referral_code, role)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":   "Failed",
