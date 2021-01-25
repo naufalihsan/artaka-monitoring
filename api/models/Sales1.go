@@ -41,7 +41,7 @@ func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	if err != nil {
 		return err, nil
 	}
-	var res []Data
+	var res []Referral
 	for i := 0; i < len(datas); i++ {
 		if datas[i].Referral_code != "" {
 			res = append(res, datas[i])
