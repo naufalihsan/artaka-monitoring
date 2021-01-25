@@ -247,7 +247,7 @@ func Allshow(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	}
 	var res []Data
 	for i := 0; i < len(datas); i++ {
-		if role == "ADMIN" {
+		if role == "ADMIN" && datas[i].Referral_code != "" && datas[i].Referral_code == "" {
 			res = append(res, datas[i])
 		} else {
 			if datas[i].Referral_code == referral_code {
