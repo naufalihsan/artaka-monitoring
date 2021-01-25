@@ -410,10 +410,7 @@ func (server *Server) NotAll(c *gin.Context) {
 
 func (server *Server) Already(c *gin.Context) {
 	// Is this user authenticated?
-	uid, referral_code, role, err := auth.ExtractTokenID(c.Request)
-	fmt.Println(referral_code)
-	fmt.Println(role)
-	fmt.Println(uid)
+	_, referral_code, role, err := auth.ExtractTokenID(c.Request)
 	if err != nil {
 		errList["Unauthorized"] = "Unauthorized"
 		c.JSON(http.StatusUnauthorized, gin.H{
