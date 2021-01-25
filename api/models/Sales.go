@@ -143,10 +143,16 @@ func Show(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	for i := 0; i < len(datas); i++ {
 		if role == "ADMIN" {
 			if datas[i].Referral_code != "" || datas[i].Referral_code == "" && datas[i].Boolean == "" && datas[i].Feedback == "" {
+				if datas[i].Boolean == "" && datas[i].Feedback == "" {
+
+					res = append(res, datas[i])
+				}
+			}
+		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) {
+			if datas[i].Boolean == "" && datas[i].Feedback == "" {
 				res = append(res, datas[i])
 			}
-		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) && datas[i].Boolean == "" && datas[i].Feedback == "" {
-			res = append(res, datas[i])
+
 		}
 
 	}
@@ -197,11 +203,17 @@ func Show1(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	var res []Data
 	for i := 0; i < len(datas); i++ {
 		if role == "ADMIN" {
-			if datas[i].Referral_code != "" || datas[i].Referral_code == "" && datas[i].Feedback != "" || datas[i].Boolean != "" {
+			if datas[i].Referral_code != "" || datas[i].Referral_code == "" {
+				if datas[i].Feedback != "" || datas[i].Boolean != "" {
+
+					res = append(res, datas[i])
+				}
+			}
+		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) {
+			if datas[i].Feedback != "" || datas[i].Boolean != "" {
+
 				res = append(res, datas[i])
 			}
-		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) && datas[i].Feedback != "" || datas[i].Boolean != "" {
-			res = append(res, datas[i])
 		}
 	}
 	return nil, res
@@ -306,11 +318,15 @@ func NotRespon(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	var res []Data
 	for i := 0; i < len(datas); i++ {
 		if role == "ADMIN" {
-			if datas[i].Boolean != "1" && datas[i].Referral_code != "" || datas[i].Referral_code == "" {
+			if datas[i].Referral_code != "" || datas[i].Referral_code == "" {
+				if datas[i].Boolean != "1" {
+					res = append(res, datas[i])
+				}
+			}
+		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) {
+			if datas[i].Boolean != "1" {
 				res = append(res, datas[i])
 			}
-		} else if strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code)) && datas[i].Boolean != "1" {
-			res = append(res, datas[i])
 		}
 	}
 	return nil, res
