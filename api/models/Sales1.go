@@ -41,7 +41,7 @@ func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	if err != nil {
 		return err, nil
 	}
-	// strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code))
+	// tambahin condition
 	var res []Referral
 	for i := 0; i < len(datas); i++ {
 		if datas[i].Referral_code != "" {
