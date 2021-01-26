@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"strings"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -42,8 +43,9 @@ func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 		return err, nil
 	}
 	var res []Referral
+
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Referral_code != "" && datas[i].Referral_code != datas[i+1].Referral_code {
+		if datas[i].Referral_code != "" && strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(datas[i+1].Referral_code)) {
 			res = append(res, datas[i])
 		}
 	}
