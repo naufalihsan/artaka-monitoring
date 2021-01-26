@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"strings"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -37,15 +36,14 @@ type Referral struct {
 
 func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	var datas []Referral
-	query := `SELECT DISTINCT referral_code FROM subscribers WHERE referral_code IS NOT NULL`
+	query := `SELECT referral_code FROM subscribers`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
 	}
 	var res []Referral
-
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Referral_code != "" && strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(datas[i+1].Referral_code)) {
+		if datas[i].Referral_code != "" && datas[i].Referral_code != datas[i+1].Referral_code {
 			res = append(res, datas[i])
 		}
 	}
