@@ -31,7 +31,7 @@ type Sales1 struct {
 	Points_redeem    int             `json:"points_redeem"`
 }
 type Referral struct {
-	Referral_code string `gorm: json:"referral_code"`
+	Lower string `gorm: json:"lower"`
 }
 
 func ShowReferralCode(db *gorm.DB) (error, []Referral) {
@@ -44,7 +44,7 @@ func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	// tambahin condition
 	var res []Referral
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Referral_code != "" {
+		if datas[i].Lower != "" {
 			res = append(res, datas[i])
 		}
 	}
