@@ -37,7 +37,7 @@ type Referral struct {
 
 func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	var datas []Referral
-	query := `SELECT referral_code FROM subscribers`
+	query := `SELECT DISTINCT referral_code FROM subscribers WHERE referral_code IS NOT NULL`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
