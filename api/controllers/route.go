@@ -9,7 +9,7 @@ func (s *Server) initialRoutes() {
 		v1.POST("/Already", s.Already)
 		v1.POST("/ShowSleep", s.Showall)
 		v1.POST("/NotRespon", s.LateRespon)
-		v1.GET("/ShowReferral", s.ShowAllReferral)
+		v1.POST("/ShowReferral", s.ShowAllReferral)
 		v1.POST("/ShowOnlineSalesPayment", s.ShowOnlineSalesPayment)
 		v1.POST("/GetAllSubcribers", s.GetCertainSubscribers)
 
