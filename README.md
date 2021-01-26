@@ -1,4 +1,4 @@
-# Artaka-Show-Sleep-Merchants
+# Artaka-Show-Sleep-Merchant
 
 ## Register Admin
 
