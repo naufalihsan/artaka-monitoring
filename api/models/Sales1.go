@@ -31,12 +31,12 @@ type Sales1 struct {
 	Points_redeem    int             `json:"points_redeem"`
 }
 type Referral struct {
-	Lower string `gorm: json:"lower"`
+	Referral_code string `gorm: json:"referral_code"`
 }
 
 func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	var datas []Referral
-	query := `SELECT DISTINCT LOWER(trim(referral_code)) from subscribers order by LOWER(trim(referral_code))`
+	query := `SELECT DISTINCT LOWER(trim(referral_code)) as referral_code from subscribers order by LOWER(trim(referral_code))`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
@@ -44,7 +44,7 @@ func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	// tambahin condition
 	var res []Referral
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Lower != "" {
+		if datas[i].Referral_code != "" {
 			res = append(res, datas[i])
 		}
 	}
