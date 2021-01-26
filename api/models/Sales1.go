@@ -36,7 +36,7 @@ type Referral struct {
 
 func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	var datas []Referral
-	query := `select distinct lower(referral_code) from subscribers order by lower(referral_code)`
+	query := `SELECT DISTINCT LOWER(trim(referral_code)) from subscribers order by LOWER(trim(referral_code))`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
