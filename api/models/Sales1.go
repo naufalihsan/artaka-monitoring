@@ -36,14 +36,15 @@ type Referral struct {
 
 func ShowReferralCode(db *gorm.DB) (error, []Referral) {
 	var datas []Referral
-	query := `SELECT referral_code FROM subscribers`
+	query := `select distinct lower(referral_code) from subscribers order by lower(referral_code)`
 	err := db.Raw(query).Scan(&datas).Error
 	if err != nil {
 		return err, nil
 	}
+	// strings.Contains(strings.ToUpper(datas[i].Referral_code), strings.ToUpper(referral_code))
 	var res []Referral
 	for i := 0; i < len(datas); i++ {
-		if datas[i].Referral_code != "" && datas[i].Referral_code != datas[i+1].Referral_code {
+		if datas[i].Referral_code != "" {
 			res = append(res, datas[i])
 		}
 	}
