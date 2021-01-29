@@ -46,6 +46,7 @@ type Data struct {
 	Idpost            uint64          `json:"idpost"`
 	Images            json.RawMessage `json:"images"`
 	Referral_code     string          `json:"referral_code"`
+	Business_category string          `json:"business_category"`
 }
 
 func (w *Sales) Prepare() {
@@ -109,7 +110,8 @@ func Show(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	(select boolean as boolean from posts where phone = xx.user_id limit 1) as boolean,
 	(select id from posts where  phone = xx.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1) as images, 
-	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code
+	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code,
+	(select business_category from outlets where user_id = xx.user_id limit 1) as business_category
 	from(select y.user_id, max(y.create_dtm) as create_dtm from(select a.user_id, 
 	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
 	from subscribers a UNION select b.user_id, 
@@ -170,7 +172,8 @@ func Show1(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	(select boolean as boolean from posts where phone = xx.user_id limit 1) as boolean,
 	(select id from posts where  phone = xx.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1) as images, 
-	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code
+	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code,
+	(select business_category from outlets where user_id = xx.user_id limit 1) as business_category
 	from(select y.user_id, max(y.create_dtm) as create_dtm from(select a.user_id, 
 	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
 	from subscribers a UNION select b.user_id, 
@@ -231,7 +234,8 @@ func Allshow(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	(select boolean as boolean from posts where phone = xx.user_id limit 1) as boolean,
 	(select id from posts where  phone = xx.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1) as images, 
-	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code
+	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code,
+	(select business_category from outlets where user_id = xx.user_id limit 1) as business_category
 	from(select y.user_id, max(y.create_dtm) as create_dtm from(select a.user_id, 
 	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
 	from subscribers a UNION select b.user_id, 
@@ -285,7 +289,8 @@ func NotRespon(db *gorm.DB, referral_code string, role string) (error, []Data) {
 	(select boolean as boolean from posts where phone = xx.user_id limit 1) as boolean,
 	(select id from posts where  phone = xx.user_id limit 1) as idpost, 
 	(select to_jsonb(images) from outlets where user_id = xx.user_id limit 1) as images, 
-	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code
+	(select referral_code from subscribers where user_id = xx.user_id limit 1) as referral_code,
+	(select business_category from outlets where user_id = xx.user_id limit 1) as business_category
 	from(select y.user_id, max(y.create_dtm) as create_dtm from(select a.user_id, 
 	(select s.create_dtm from sales s where user_id = a.user_id and create_dtm < (current_date -7) order by create_dtm desc limit 1)
 	from subscribers a UNION select b.user_id, 
